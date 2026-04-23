@@ -3,446 +3,300 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>bosscostumes.com — Premium Domain For Sale</title>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&family=Playfair+Display:ital@1&display=swap" rel="stylesheet"/>
+  <title>Onaissa 🌙</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --gold: #C9A84C;
-      --gold-light: #E8C96A;
-      --gold-dim: #8A6E30;
-      --black: #0A0A0A;
-      --dark: #111111;
-      --mid: #1C1C1C;
-      --text: #F0EDE6;
-      --muted: #888880;
+      --rose:    #ff6b9d;
+      --pink:    #ffb3cc;
+      --lavender:#c084fc;
+      --gold:    #ffd700;
+      --glass:   rgba(255,255,255,0.12);
+      --blur:    blur(14px);
     }
 
     html { scroll-behavior: smooth; }
 
     body {
-      background-color: var(--black);
-      color: var(--text);
-      font-family: 'DM Sans', sans-serif;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: linear-gradient(135deg, #1a0020 0%, #2d0040 40%, #0d0020 100%);
+      color: #fff;
       min-height: 100vh;
       overflow-x: hidden;
     }
 
-    /* ── NOISE TEXTURE OVERLAY ── */
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-      pointer-events: none;
-      z-index: 1000;
-      opacity: 0.35;
+    #stars-canvas {
+      position: fixed; top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none; z-index: 0;
     }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(20,0,30,0.7);
+      backdrop-filter: var(--blur);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 40px;
+      border-bottom: 1px solid rgba(255,107,157,0.2);
+    }
+    .nav-logo {
+      font-size: 1.4rem; font-weight: 700; letter-spacing: 2px;
+      background: linear-gradient(90deg, var(--rose), var(--lavender));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .nav-links { display: flex; gap: 28px; list-style: none; }
+    .nav-links a {
+      color: rgba(255,255,255,0.75); text-decoration: none;
+      font-size: 0.9rem; letter-spacing: 1px; transition: color .3s;
+    }
+    .nav-links a:hover { color: var(--rose); }
+
+    section { position: relative; z-index: 1; }
 
     /* ── HERO ── */
-    .hero {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 60px 20px;
-      position: relative;
-      text-align: center;
+    #hero {
+      min-height: 100vh; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center; padding: 120px 20px 60px;
     }
-
-    /* Radial gold glow */
-    .hero::after {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -60%);
-      width: 700px;
-      height: 700px;
-      background: radial-gradient(circle, rgba(201,168,76,0.13) 0%, transparent 70%);
-      pointer-events: none;
+    .hero-glow {
+      position: absolute; width: 500px; height: 500px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,107,157,0.25) 0%, transparent 70%);
+      top: 50%; left: 50%; transform: translate(-50%,-50%); pointer-events: none;
     }
-
-    .badge {
-      display: inline-block;
-      border: 1px solid var(--gold-dim);
-      color: var(--gold);
-      font-size: 0.72rem;
-      letter-spacing: 0.25em;
-      text-transform: uppercase;
-      padding: 6px 18px;
-      border-radius: 100px;
-      margin-bottom: 36px;
-      animation: fadeDown 0.8s ease both;
+    .hero-avatar {
+      width: 140px; height: 140px; border-radius: 50%;
+      border: 3px solid var(--rose);
+      background: linear-gradient(135deg, var(--rose), var(--lavender));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 4rem; margin-bottom: 28px;
+      box-shadow: 0 0 40px rgba(255,107,157,0.5);
+      animation: floatAvatar 4s ease-in-out infinite;
     }
-
+    @keyframes floatAvatar {
+      0%,100% { transform: translateY(0); } 50% { transform: translateY(-14px); }
+    }
     .hero-title {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: clamp(3.5rem, 14vw, 10rem);
-      line-height: 0.92;
-      letter-spacing: 0.02em;
-      color: var(--text);
-      animation: fadeUp 0.9s ease 0.1s both;
+      font-size: clamp(2.8rem,8vw,5.5rem); font-weight: 800; line-height: 1.1;
+      background: linear-gradient(135deg,#fff 0%,var(--pink) 50%,var(--lavender) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      margin-bottom: 16px;
     }
-
-    .hero-title span {
-      color: var(--gold);
-      display: block;
-    }
-
-    .hero-domain {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: clamp(1.4rem, 5vw, 3.2rem);
-      letter-spacing: 0.15em;
-      color: var(--muted);
-      margin-top: 10px;
-      animation: fadeUp 0.9s ease 0.2s both;
-    }
-
-    .hero-domain em {
-      font-style: normal;
-      color: var(--gold-light);
-    }
-
-    .divider {
-      width: 80px;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, var(--gold), transparent);
-      margin: 40px auto;
-      animation: fadeUp 0.9s ease 0.3s both;
-    }
-
     .hero-sub {
-      font-size: 1.05rem;
-      font-weight: 300;
-      color: var(--muted);
-      max-width: 480px;
-      line-height: 1.75;
-      animation: fadeUp 0.9s ease 0.35s both;
+      font-size: 1.2rem; color: rgba(255,255,255,0.65);
+      max-width: 460px; line-height: 1.7; margin-bottom: 36px;
     }
-
-    /* ── VALUE PILLS ── */
-    .pills {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      justify-content: center;
-      margin: 44px 0 0;
-      animation: fadeUp 0.9s ease 0.45s both;
+    .hero-badges { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-bottom: 40px; }
+    .badge {
+      background: var(--glass); backdrop-filter: var(--blur);
+      border: 1px solid rgba(255,107,157,0.3); border-radius: 999px;
+      padding: 8px 20px; font-size: 0.85rem; color: var(--pink);
     }
-
-    .pill {
-      background: var(--mid);
-      border: 1px solid #2A2A2A;
-      border-radius: 100px;
-      padding: 8px 20px;
-      font-size: 0.82rem;
-      letter-spacing: 0.05em;
-      color: var(--text);
-      display: flex;
-      align-items: center;
-      gap: 8px;
+    .btn-primary {
+      background: linear-gradient(135deg, var(--rose), var(--lavender));
+      color: #fff; border: none; border-radius: 999px;
+      padding: 14px 38px; font-size: 1rem; font-weight: 700;
+      cursor: pointer; letter-spacing: 1px;
+      box-shadow: 0 6px 30px rgba(255,107,157,0.4);
+      transition: transform .2s, box-shadow .2s;
+      text-decoration: none; display: inline-block;
     }
+    .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(255,107,157,0.6); }
 
-    .pill-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--gold);
-      flex-shrink: 0;
+    /* ── ABOUT ── */
+    #about { padding: 100px 20px; }
+    .about-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(240px,1fr)); gap: 24px; max-width: 900px; margin: 0 auto; }
+    .about-card {
+      background: var(--glass); backdrop-filter: var(--blur);
+      border: 1px solid rgba(255,107,157,0.2); border-radius: 20px;
+      padding: 32px 28px; text-align: center; transition: transform .3s, border-color .3s;
     }
+    .about-card:hover { transform: translateY(-6px); border-color: var(--rose); }
+    .about-card .icon { font-size: 2.4rem; margin-bottom: 14px; }
+    .about-card h3 { font-size: 1.1rem; color: var(--pink); margin-bottom: 8px; }
+    .about-card p  { color: rgba(255,255,255,0.65); font-size: 0.9rem; line-height: 1.6; }
 
-    /* ── CTA SECTION ── */
-    .cta-section {
-      padding: 80px 20px 100px;
-      max-width: 680px;
-      margin: 0 auto;
+    .section-title {
+      text-align: center; font-size: clamp(1.8rem,4vw,2.8rem);
+      font-weight: 800; margin-bottom: 12px;
+      background: linear-gradient(90deg,var(--pink),var(--lavender));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .section-sub { text-align: center; color: rgba(255,255,255,0.5); margin-bottom: 52px; font-size: 1rem; }
+
+    /* ── INTERACTIVE BOOK STORY ── */
+    #timeline { padding: 100px 20px; perspective: 1500px; }
+    .book {
+      position: relative; width: 100%; max-width: 500px;
+      height: 400px; margin: 0 auto; transition: transform 0.5s;
+    }
+    .page {
+      position: absolute; width: 100%; height: 100%; top: 0; left: 0;
+      transform-origin: left; transform-style: preserve-3d;
+      transition: transform 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
+      cursor: pointer;
+    }
+    .page.flipped { transform: rotateY(-180deg); }
+    .page-front, .page-back {
+      position: absolute; width: 100%; height: 100%;
+      backface-visibility: hidden; display: flex; flex-direction: column;
+      justify-content: center; align-items: center; padding: 40px;
+      border-radius: 0 15px 15px 0; box-shadow: inset 3px 0 10px rgba(0,0,0,0.2);
       text-align: center;
     }
+    .page-front {
+      background: linear-gradient(135deg, #2d0040 0%, #1a0020 100%);
+      border: 1px solid rgba(255, 107, 157, 0.3); z-index: 2;
+    }
+    .page-back {
+      background: #2d0040; transform: rotateY(180deg);
+      z-index: 1; border-radius: 15px 0 0 15px;
+    }
+    .book-title { color: var(--rose); font-size: 1.5rem; margin-bottom: 15px; font-weight: 800; }
+    .book-text { color: rgba(255,255,255,0.8); line-height: 1.6; font-size: 1rem; }
 
-    .section-label {
-      font-size: 0.72rem;
-      letter-spacing: 0.3em;
-      text-transform: uppercase;
-      color: var(--gold-dim);
-      margin-bottom: 20px;
+    /* ── GAMES & LETTER ── */
+    #games { padding: 100px 20px; background: rgba(100,0,80,0.12); }
+    .games-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(300px,1fr)); gap: 28px; max-width: 1000px; margin: 0 auto; }
+    .game-card {
+      background: var(--glass); backdrop-filter: var(--blur);
+      border: 1px solid rgba(255,107,157,0.25); border-radius: 24px;
+      padding: 32px 28px; text-align: center; transition: transform .3s, border-color .3s;
     }
+    .game-card:hover { transform: translateY(-4px); border-color: var(--rose); }
 
-    .cta-title {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: clamp(2.2rem, 6vw, 4rem);
-      letter-spacing: 0.04em;
-      margin-bottom: 14px;
-      color: var(--text);
+    /* Letter/Envelope Styles */
+    #letter { padding: 100px 20px; }
+    .envelope {
+      position: relative; width: 420px; height: 280px; margin: 0 auto; cursor: pointer;
+      filter: drop-shadow(0 16px 48px rgba(255,107,157,0.4));
     }
+    .envelope.opened .env-flap-group { transform: rotateX(180deg); transform-origin: top; transition: 1s; }
+    .letter-paper {
+      width: 400px; max-width: 90vw; background: #fdf0ff; border-radius: 10px;
+      padding: 40px; margin: 20px auto; color: #2a0030; display: none;
+    }
+    .letter-paper.visible { display: block; animation: slideDown 0.8s ease; }
+    @keyframes slideDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
 
-    .cta-desc {
-      font-size: 0.95rem;
-      color: var(--muted);
-      line-height: 1.8;
-      margin-bottom: 50px;
-      font-weight: 300;
-    }
-
-    /* ── CONTACT CARDS ── */
-    .contact-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 14px;
-    }
-
-    .contact-card {
-      background: var(--mid);
-      border: 1px solid #252525;
-      border-radius: 16px;
-      padding: 28px 20px;
-      text-decoration: none;
-      color: var(--text);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 12px;
-      transition: border-color 0.25s, transform 0.25s, background 0.25s;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .contact-card::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, rgba(201,168,76,0.06), transparent 60%);
-      opacity: 0;
-      transition: opacity 0.3s;
-    }
-
-    .contact-card:hover::before { opacity: 1; }
-    .contact-card:hover {
-      border-color: var(--gold-dim);
-      transform: translateY(-4px);
-      background: #1E1E1E;
-    }
-
-    .card-icon {
-      width: 48px;
-      height: 48px;
-      border-radius: 12px;
-      background: rgba(201,168,76,0.1);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.4rem;
-    }
-
-    .card-label {
-      font-size: 0.7rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--gold);
-    }
-
-    .card-value {
-      font-size: 0.88rem;
-      color: var(--muted);
-      font-weight: 300;
-      text-align: center;
-      word-break: break-all;
-    }
-
-    /* ── FEATURES STRIP ── */
-    .features {
-      border-top: 1px solid #1C1C1C;
-      border-bottom: 1px solid #1C1C1C;
-      background: var(--dark);
-      padding: 60px 20px;
-    }
-
-    .features-inner {
-      max-width: 900px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 40px;
-      text-align: center;
-    }
-
-    .feature-item h3 {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 2rem;
-      color: var(--gold);
-      letter-spacing: 0.05em;
-    }
-
-    .feature-item p {
-      font-size: 0.85rem;
-      color: var(--muted);
-      margin-top: 6px;
-      line-height: 1.6;
-      font-weight: 300;
-    }
-
-    /* ── QUOTE BLOCK ── */
-    .quote-block {
-      padding: 80px 20px;
-      max-width: 680px;
-      margin: 0 auto;
-      text-align: center;
-    }
-
-    .quote-text {
-      font-family: 'Playfair Display', serif;
-      font-style: italic;
-      font-size: clamp(1.15rem, 3vw, 1.55rem);
-      color: var(--muted);
-      line-height: 1.7;
-    }
-
-    .quote-text strong {
-      color: var(--gold-light);
-      font-style: normal;
-    }
-
-    /* ── FOOTER ── */
-    footer {
-      padding: 40px 20px;
-      text-align: center;
-      border-top: 1px solid #1A1A1A;
-    }
-
-    footer p {
-      font-size: 0.78rem;
-      color: #444;
-      letter-spacing: 0.08em;
-    }
-
-    footer span {
-      color: var(--gold-dim);
-    }
-
-    /* ── ANIMATIONS ── */
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(24px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes fadeDown {
-      from { opacity: 0; transform: translateY(-16px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    /* ── GLOW LINE ── */
-    .glow-line {
-      width: 100%;
-      height: 1px;
-      background: linear-gradient(90deg, transparent 0%, var(--gold-dim) 30%, var(--gold) 50%, var(--gold-dim) 70%, transparent 100%);
-      opacity: 0.5;
-    }
+    footer { text-align: center; padding: 50px; color: rgba(255,255,255,0.3); border-top: 1px solid rgba(255,107,157,0.1); }
+    .reveal { opacity: 0; transform: translateY(40px); transition: 0.7s; }
+    .reveal.visible { opacity: 1; transform: none; }
   </style>
 </head>
 <body>
 
-  <!-- HERO -->
-  <section class="hero">
-    <div class="badge">✦ Premium Domain For Sale ✦</div>
+<canvas id="stars-canvas"></canvas>
 
-    <h1 class="hero-title">
-      Boss<span>Costumes</span>
-    </h1>
+<nav>
+  <div class="nav-logo">✦ ONAISSA ✦</div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#games">Games</a></li>
+    <li><a href="#timeline">Our Story</a></li>
+    <li><a href="#letter">Letter</a></li>
+  </ul>
+</nav>
 
-    <p class="hero-domain"><em>bosscostumes.com</em></p>
+<section id="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-avatar">🌙</div>
+  <h1 class="hero-title">Onaissa</h1>
+  <p class="hero-sub">A whole universe wrapped in one person — this page is yours, made with every bit of love I have.</p>
+  <a href="#about" class="btn-primary">Explore Your World ↓</a>
+</section>
 
-    <div class="divider"></div>
+<section id="about">
+  <h2 class="section-title reveal">Who Is She?</h2>
+  <div class="about-grid">
+    <div class="about-card reveal"><div class="icon">🌙</div><h3>Onaissa</h3><p>Her name sounds like a song — soft, unique, and unforgettable.</p></div>
+    <div class="about-card reveal"><div class="icon">💫</div><h3>Her Energy</h3><p>She lights up every room she walks into without even trying.</p></div>
+    <div class="about-card reveal"><div class="icon">💖</div><h3>Her Heart</h3><p>Warm, genuine, and kind in ways that make the world better.</p></div>
+  </div>
+</section>
 
-    <p class="hero-sub">
-      A powerful, brandable domain for the costume &amp; entertainment industry. Memorable. Marketable. Ready to wear.
-    </p>
-
-    <div class="pills">
-      <div class="pill"><span class="pill-dot"></span> .com Extension</div>
-      <div class="pill"><span class="pill-dot"></span> Instant Transfer</div>
-      <div class="pill"><span class="pill-dot"></span> High Recall</div>
-      <div class="pill"><span class="pill-dot"></span> Brand-Ready</div>
-      <div class="pill"><span class="pill-dot"></span> SEO Friendly</div>
+<section id="timeline">
+  <h2 class="section-title reveal">Our Story ✨</h2>
+  <p class="section-sub reveal">Click the pages to flip through our journey.</p>
+  <div class="book reveal" id="storyBook">
+    <div class="page" onclick="this.classList.toggle('flipped')">
+      <div class="page-front">
+        <div class="book-title">The Beginning 👀</div>
+        <p class="book-text">Neither of us knew it yet, but something quietly clicked into place. The universe had been planning this.</p>
+      </div>
+      <div class="page-back"></div>
     </div>
-  </section>
-
-  <div class="glow-line"></div>
-
-  <!-- STATS -->
-  <section class="features">
-    <div class="features-inner">
-      <div class="feature-item">
-        <h3>2</h3>
-        <p>Strong power words that command attention and authority</p>
+    <div class="page" onclick="this.classList.toggle('flipped')">
+      <div class="page-front">
+        <div class="book-title">First Conversation 💬</div>
+        <p class="book-text">We talked like we'd known each other for years. Time disappeared. I didn't want it to stop.</p>
       </div>
-      <div class="feature-item">
-        <h3>.COM</h3>
-        <p>The gold standard TLD — trusted globally, remembered instantly</p>
-      </div>
-      <div class="feature-item">
-        <h3>12</h3>
-        <p>Characters — short enough to remember, unique enough to own</p>
-      </div>
-      <div class="feature-item">
-        <h3>∞</h3>
-        <p>Potential for costumes, events, theatre, fashion &amp; entertainment brands</p>
-      </div>
+      <div class="page-back"></div>
     </div>
-  </section>
-
-  <div class="glow-line"></div>
-
-  <!-- QUOTE -->
-  <section class="quote-block">
-    <p class="quote-text">
-      "A domain name is your <strong>digital real estate</strong> — and <strong>bosscostumes.com</strong> is prime location in one of the most creative and growing markets online."
-    </p>
-  </section>
-
-  <div class="glow-line"></div>
-
-  <!-- CTA -->
-  <section class="cta-section">
-    <p class="section-label">Make an Offer</p>
-    <h2 class="cta-title">Ready to Acquire This Domain?</h2>
-    <p class="cta-desc">
-      Reach out directly — call, text, or email to start the conversation. 
-      Fast response. Smooth transfer process.
-    </p>
-
-    <div class="contact-grid">
-
-      <!-- CALL -->
-      <a href="tel:+213559096105" class="contact-card">
-        <div class="card-icon">📞</div>
-        <span class="card-label">Call Us</span>
-        <span class="card-value">+213 559 096 105</span>
-      </a>
-
-      <!-- TEXT / SMS -->
-      <a href="sms:+213559096105" class="contact-card">
-        <div class="card-icon">💬</div>
-        <span class="card-label">Send a Text</span>
-        <span class="card-value">+213 559 096 105</span>
-      </a>
-
-      <!-- EMAIL -->
-      <a href="mailto:islam.hammia1995@gmail.com?subject=Interested%20in%20bosscostumes.com" class="contact-card">
-        <div class="card-icon">✉️</div>
-        <span class="card-label">Email Us</span>
-        <span class="card-value">islam.hammia1995@gmail.com</span>
-      </a>
-
+    <div class="page" onclick="this.classList.toggle('flipped')">
+      <div class="page-front">
+        <div class="book-title">Today & Forever 🌙</div>
+        <p class="book-text">Every day with you feels like the best chapter yet. I can't wait for the rest.</p>
+      </div>
+      <div class="page-back"></div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- FOOTER -->
-  <footer>
-    <div class="divider" style="margin-bottom: 20px;"></div>
-    <p>© 2026 <span>bosscostumes.com</span> — All rights reserved.</p>
-    <p style="margin-top: 8px;">Created by <span>Hammia Islam</span></p>
-  </footer>
+<section id="letter">
+  <h2 class="section-title reveal">A Letter For You 💌</h2>
+  <div class="envelope reveal" id="envelope" onclick="openEnvelope()">
+    <svg viewBox="0 0 420 280">
+      <rect width="420" height="280" fill="#3a0048" />
+      <g class="env-flap-group"><polygon points="0,0 420,0 210,150" fill="#4a0055" stroke="#ff6b9d" /></g>
+      <text x="210" y="200" text-anchor="middle" fill="white">Click to Open</text>
+    </svg>
+  </div>
+  <div class="letter-paper" id="letterPaper">
+    <p>Dear Onaissa,</p>
+    <p>I built this little corner of the internet for you because you deserve to be celebrated. You are loved, you are seen, and you are everything.</p>
+    <p>— Always yours 💜</p>
+  </div>
+</section>
 
+<footer>
+  <p>Made with <span>♥</span> for Onaissa</p>
+</footer>
+
+<script>
+  // Star logic
+  (function(){
+    const c = document.getElementById('stars-canvas');
+    const ctx = c.getContext('2d');
+    function resize(){ c.width=window.innerWidth; c.height=window.innerHeight; }
+    resize(); window.addEventListener('resize',resize);
+    function draw(){
+      ctx.clearRect(0,0,c.width,c.height);
+      ctx.fillStyle="white";
+      for(let i=0; i<100; i++) ctx.fillRect(Math.random()*c.width, Math.random()*c.height, 2, 2);
+      requestAnimationFrame(draw);
+    }
+    draw();
+  })();
+
+  // Reveal logic
+  const obs=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible'); });
+  },{threshold:.1});
+  document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+
+  // Book layering
+  const pages = document.querySelectorAll('.page');
+  pages.forEach((p, i) => p.style.zIndex = pages.length - i);
+
+  // Envelope logic
+  function openEnvelope(){
+    document.getElementById('envelope').classList.add('opened');
+    setTimeout(() => document.getElementById('letterPaper').classList.add('visible'), 600);
+  }
+</script>
 </body>
 </html>
+
