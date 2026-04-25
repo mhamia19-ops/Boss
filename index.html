@@ -1,0 +1,1098 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Onaissa 🌙</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --rose:    #ff6b9d;
+      --pink:    #ffb3cc;
+      --lavender:#c084fc;
+      --gold:    #ffd700;
+      --glass:   rgba(255,255,255,0.12);
+      --blur:    blur(14px);
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: linear-gradient(135deg, #1a0020 0%, #2d0040 40%, #0d0020 100%);
+      color: #fff; min-height: 100vh; overflow-x: hidden;
+    }
+    #stars-canvas {
+      position: fixed; top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none; z-index: 0;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(20,0,30,0.7); backdrop-filter: var(--blur);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 40px; border-bottom: 1px solid rgba(255,107,157,0.2);
+    }
+    .nav-logo {
+      font-size: 1.4rem; font-weight: 700; letter-spacing: 2px;
+      background: linear-gradient(90deg, var(--rose), var(--lavender));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .nav-links { display: flex; gap: 28px; list-style: none; }
+    .nav-links a {
+      color: rgba(255,255,255,0.75); text-decoration: none;
+      font-size: 0.9rem; letter-spacing: 1px; transition: color .3s;
+    }
+    .nav-links a:hover { color: var(--rose); }
+    section { position: relative; z-index: 1; }
+
+    /* HERO */
+    #hero {
+      min-height: 100vh; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center; padding: 120px 20px 60px;
+    }
+    .hero-glow {
+      position: absolute; width: 500px; height: 500px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,107,157,0.25) 0%, transparent 70%);
+      top: 50%; left: 50%; transform: translate(-50%,-50%); pointer-events: none;
+    }
+    .hero-avatar {
+      width: 140px; height: 140px; border-radius: 50%;
+      border: 3px solid var(--rose);
+      background: linear-gradient(135deg, var(--rose), var(--lavender));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 4rem; margin-bottom: 28px;
+      box-shadow: 0 0 40px rgba(255,107,157,0.5);
+      animation: floatAvatar 4s ease-in-out infinite;
+    }
+    @keyframes floatAvatar { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-14px)} }
+    .hero-title {
+      font-size: clamp(2.8rem,8vw,5.5rem); font-weight: 800; line-height: 1.1;
+      background: linear-gradient(135deg,#fff 0%,var(--pink) 50%,var(--lavender) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 16px;
+    }
+    .hero-sub { font-size: 1.2rem; color: rgba(255,255,255,0.65); max-width: 460px; line-height: 1.7; margin-bottom: 36px; }
+    .hero-badges { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-bottom: 40px; }
+    .badge {
+      background: var(--glass); backdrop-filter: var(--blur);
+      border: 1px solid rgba(255,107,157,0.3); border-radius: 999px;
+      padding: 8px 20px; font-size: 0.85rem; color: var(--pink);
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--rose), var(--lavender));
+      color: #fff; border: none; border-radius: 999px;
+      padding: 14px 38px; font-size: 1rem; font-weight: 700;
+      cursor: pointer; letter-spacing: 1px;
+      box-shadow: 0 6px 30px rgba(255,107,157,0.4);
+      transition: transform .2s, box-shadow .2s;
+      text-decoration: none; display: inline-block;
+    }
+    .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(255,107,157,0.6); }
+
+    .floating-heart {
+      position: fixed; animation: riseHeart linear infinite;
+      pointer-events: none; z-index: 0; opacity: 0;
+    }
+    @keyframes riseHeart {
+      0%   { transform: translateY(100vh) scale(.6); opacity: .7; }
+      100% { transform: translateY(-10vh) scale(1.1); opacity: 0; }
+    }
+
+    .section-title {
+      text-align: center; font-size: clamp(1.8rem,4vw,2.8rem);
+      font-weight: 800; margin-bottom: 12px;
+      background: linear-gradient(90deg,var(--pink),var(--lavender));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .section-sub { text-align: center; color: rgba(255,255,255,0.5); margin-bottom: 52px; font-size: 1rem; }
+
+    /* ABOUT */
+    #about { padding: 100px 20px; }
+    .about-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(240px,1fr)); gap: 24px; max-width: 900px; margin: 0 auto; }
+    .about-card {
+      background: var(--glass); backdrop-filter: var(--blur);
+      border: 1px solid rgba(255,107,157,0.2); border-radius: 20px;
+      padding: 32px 28px; text-align: center; transition: transform .3s, border-color .3s;
+    }
+    .about-card:hover { transform: translateY(-6px); border-color: var(--rose); }
+    .about-card .icon { font-size: 2.4rem; margin-bottom: 14px; }
+    .about-card h3 { font-size: 1.1rem; color: var(--pink); margin-bottom: 8px; }
+    .about-card p  { color: rgba(255,255,255,0.65); font-size: 0.9rem; line-height: 1.6; }
+
+    /* REASONS */
+    #reasons { padding: 100px 20px; background: rgba(255,107,157,0.04); }
+    .reasons-list { max-width: 700px; margin: 0 auto; counter-reset: reasons; display: flex; flex-direction: column; gap: 20px; }
+    .reason-item {
+      counter-increment: reasons; background: var(--glass); backdrop-filter: var(--blur);
+      border: 1px solid rgba(192,132,252,0.25); border-radius: 16px;
+      padding: 22px 28px 22px 70px; position: relative; transition: transform .3s;
+    }
+    .reason-item:hover { transform: translateX(8px); }
+    .reason-item::before {
+      content: counter(reasons); position: absolute; left: 20px; top: 50%; transform: translateY(-50%);
+      font-size: 1.5rem; font-weight: 900; color: var(--rose); opacity: .5;
+    }
+    .reason-item p { color: rgba(255,255,255,.85); line-height: 1.6; }
+    .reason-item .r-emoji { font-size: 1.2rem; margin-right: 8px; }
+
+    /* GAMES */
+    #games { padding: 100px 20px; background: rgba(100,0,80,0.12); }
+    .games-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(300px,1fr)); gap: 28px; max-width: 1000px; margin: 0 auto; }
+    .game-card {
+      background: var(--glass); backdrop-filter: var(--blur);
+      border: 1px solid rgba(255,107,157,0.25); border-radius: 24px;
+      padding: 32px 28px; text-align: center; transition: transform .3s, border-color .3s;
+    }
+    .game-card:hover { transform: translateY(-4px); border-color: var(--rose); }
+    .game-card h3 { font-size: 1.2rem; color: var(--pink); margin-bottom: 8px; }
+    .game-card p  { color: rgba(255,255,255,.55); font-size: .88rem; margin-bottom: 20px; }
+    #scramble-word { font-size: 2.2rem; font-weight: 800; letter-spacing: 10px; color: var(--lavender); margin: 12px 0; }
+    #scramble-input {
+      width: 100%; padding: 10px 16px; border-radius: 10px;
+      border: 1.5px solid rgba(255,107,157,.4); background: rgba(0,0,0,.3);
+      color: #fff; font-size: 1rem; text-align: center; margin-bottom: 10px; outline: none;
+    }
+    #scramble-feedback { min-height: 22px; font-size: .9rem; color: var(--gold); }
+    #catch-canvas {
+      display: block; border-radius: 14px; border: 1px solid rgba(255,107,157,.3);
+      margin: 0 auto 10px; background: rgba(0,0,0,.25); cursor: pointer;
+    }
+    #catch-score-display { color: var(--pink); font-size: .95rem; margin-bottom: 8px; }
+    .memory-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 8px; margin: 0 auto 12px; max-width: 280px; }
+    .mem-card {
+      width: 100%; aspect-ratio: 1; border-radius: 10px;
+      background: linear-gradient(135deg,var(--rose),var(--lavender));
+      border: none; font-size: 1.4rem; cursor: pointer;
+      color: transparent; transition: transform .2s, background .2s;
+    }
+    .mem-card.flipped,.mem-card.matched { color: #fff; background: rgba(0,0,0,.35); }
+    .mem-card.matched { background: linear-gradient(135deg,#2d8a4e,#5cdb95); cursor: default; }
+    #mem-status { color: var(--gold); font-size: .88rem; min-height: 20px; }
+    #quiz-question { color: #fff; font-size: 1rem; margin-bottom: 16px; line-height: 1.5; }
+    .quiz-options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px; }
+    .quiz-opt {
+      background: rgba(255,255,255,.08); border: 1.5px solid rgba(255,107,157,.3);
+      border-radius: 10px; padding: 10px 16px; color: #fff;
+      font-size: .9rem; cursor: pointer; text-align: left; transition: background .2s, border-color .2s;
+    }
+    .quiz-opt:hover { background: rgba(255,107,157,.2); border-color: var(--rose); }
+    .quiz-opt.correct { background: rgba(40,180,90,.3); border-color: #5cdb95; }
+    .quiz-opt.wrong   { background: rgba(220,40,40,.3); border-color: #f87171; }
+    #quiz-feedback { min-height: 22px; font-size: .9rem; color: var(--gold); }
+    #quiz-score { color: var(--pink); font-size: .88rem; }
+
+    /* ENVELOPE */
+    #letter { padding: 100px 20px; }
+    .envelope-scene { display: flex; flex-direction: column; align-items: center; }
+    .envelope {
+      position: relative; width: 420px; height: 280px; cursor: pointer;
+      transition: transform .3s, filter .3s;
+      filter: drop-shadow(0 16px 48px rgba(255,107,157,0.4)); flex-shrink: 0;
+    }
+    .envelope:not(.opened) { animation: envBob 3.5s ease-in-out infinite; }
+    @keyframes envBob { 0%,100%{transform:translateY(0) rotate(-0.8deg)} 50%{transform:translateY(-10px) rotate(0.8deg)} }
+    .envelope:hover { filter: drop-shadow(0 24px 60px rgba(255,107,157,0.65)); }
+    .envelope.opened { animation: none; cursor: default; }
+    .envelope svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+    .env-flap-group { transform-origin: 210px 0px; transform-box: fill-box; transition: transform 1s cubic-bezier(0.4,0,0.2,1); }
+    .envelope.opened .env-flap-group { transform: rotateX(180deg); }
+    .env-seal-group { transition: opacity .35s ease .2s, transform .35s ease .2s; transform-origin: center; transform-box: fill-box; }
+    .envelope.opened .env-seal-group { opacity: 0; transform: scale(0.5); }
+    .env-hint { margin-top: 20px; font-size: .85rem; color: rgba(255,180,210,0.65); letter-spacing: 2px; animation: hintPulse 2s ease-in-out infinite; }
+    @keyframes hintPulse { 0%,100%{opacity:.4} 50%{opacity:1} }
+    .env-hint.hidden { display: none; }
+    .letter-paper {
+      width: 400px; max-width: 90vw;
+      background: linear-gradient(158deg, #fdf0ff 0%, #fde8f5 100%);
+      border-radius: 4px 4px 10px 10px; padding: 44px 42px 48px;
+      position: relative; color: #2a0030;
+      max-height: 0; overflow: hidden; opacity: 0;
+      transform: translateY(-20px) scaleY(0.92); transform-origin: top center;
+      transition: max-height .9s cubic-bezier(0.4,0,0.2,1) .55s, opacity .6s ease .75s, transform .6s ease .75s;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.45);
+    }
+    .letter-paper::after {
+      content: ''; position: absolute; left: 0; right: 0; top: 96px; bottom: 0;
+      background: repeating-linear-gradient(to bottom, transparent, transparent 30px, rgba(200,80,150,0.12) 30px, rgba(200,80,150,0.12) 31px);
+      pointer-events: none; border-radius: 0 0 10px 10px;
+    }
+    .letter-paper::before {
+      content: ''; position: absolute; left: 68px; top: 0; bottom: 0;
+      width: 1px; background: rgba(255,100,100,0.2); pointer-events: none;
+    }
+    .letter-paper.visible { max-height: 900px; opacity: 1; transform: translateY(0) scaleY(1); }
+    .letter-paper p { font-size: 1rem; line-height: 1.95; color: #2a0030; margin-bottom: 18px; position: relative; z-index: 1; }
+    .letter-paper .salutation { font-size: 1.2rem; font-weight: 700; color: #8b005a; margin-bottom: 22px; font-family: Georgia,serif; }
+    .letter-paper .signature { font-size: 1.15rem; font-style: italic; color: #cc2266; margin-top: 8px; font-family: Georgia,serif; position: relative; z-index: 1; }
+    .letter-paper .heart-deco { text-align: center; font-size: 1.6rem; margin-top: 20px; position: relative; z-index: 1; }
+    .paper-crease { position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(to bottom, rgba(180,80,130,0.15), transparent); }
+    .paper-top-fold { position: absolute; top: -3px; left: 0; right: 0; height: 6px; background: linear-gradient(158deg, #fdf0ff 0%, #fde8f5 100%); border-radius: 2px 2px 0 0; box-shadow: 0 -3px 8px rgba(255,107,157,0.12); }
+
+    /* ══════════════════════════════════════
+       INTERACTIVE BOOK
+    ══════════════════════════════════════ */
+    #timeline { padding: 100px 20px 120px; }
+
+    .book-scene {
+      display: flex; flex-direction: column; align-items: center; gap: 40px;
+    }
+
+    /* Book container — perspective wrapper */
+    .book-wrap {
+      perspective: 2000px;
+      width: 700px; max-width: 96vw;
+      position: relative;
+    }
+
+    /* The book itself — two pages side by side */
+    .book {
+      width: 100%;
+      display: flex;
+      position: relative;
+      transform-style: preserve-3d;
+      filter: drop-shadow(0 30px 70px rgba(0,0,0,0.7));
+    }
+
+    /* Shared page styles */
+    .page-left, .page-right {
+      width: 50%;
+      min-height: 420px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Left page — always visible, static */
+    .page-left {
+      background: linear-gradient(160deg, #fdf4ff 0%, #f9e8f8 100%);
+      border-radius: 8px 0 0 8px;
+      border-right: 1px solid rgba(180,80,150,0.15);
+      padding: 40px 32px 40px 40px;
+      display: flex; flex-direction: column; justify-content: center;
+      box-shadow: inset -6px 0 18px rgba(0,0,0,0.07);
+    }
+
+    /* ruled lines on left page */
+    .page-left::after {
+      content: '';
+      position: absolute; left: 0; right: 0; top: 80px; bottom: 0;
+      background: repeating-linear-gradient(to bottom, transparent, transparent 32px, rgba(200,100,180,0.1) 32px, rgba(200,100,180,0.1) 33px);
+      pointer-events: none;
+    }
+    /* red margin on left */
+    .page-left::before {
+      content: ''; position: absolute;
+      left: 52px; top: 0; bottom: 0; width: 1px;
+      background: rgba(255,80,100,0.18); pointer-events: none;
+    }
+
+    /* Right page — the "flipping" page */
+    .page-right {
+      background: linear-gradient(160deg, #fef6ff 0%, #faeaf9 100%);
+      border-radius: 0 8px 8px 0;
+      padding: 40px 40px 40px 32px;
+      display: flex; flex-direction: column; justify-content: center;
+      transform-style: preserve-3d;
+      transform-origin: left center;
+      transition: transform 0.85s cubic-bezier(0.645, 0.045, 0.355, 1.000);
+    }
+    /* ruled lines on right page */
+    .page-right::after {
+      content: '';
+      position: absolute; left: 0; right: 0; top: 80px; bottom: 0;
+      background: repeating-linear-gradient(to bottom, transparent, transparent 32px, rgba(200,100,180,0.1) 32px, rgba(200,100,180,0.1) 33px);
+      pointer-events: none;
+    }
+
+    /* Flipping state */
+    .page-right.flipping {
+      transform: rotateY(-180deg);
+    }
+
+    /* Page content */
+    .page-content {
+      position: relative; z-index: 2;
+    }
+
+    .page-chapter {
+      font-size: .72rem; font-weight: 700; letter-spacing: 3px;
+      text-transform: uppercase; margin-bottom: 14px;
+      color: rgba(160,40,120,0.55);
+    }
+    .page-icon { font-size: 2.8rem; margin-bottom: 14px; display: block; }
+    .page-title {
+      font-size: 1.25rem; font-weight: 800;
+      color: #5a0045; margin-bottom: 14px;
+      font-family: Georgia, serif; line-height: 1.3;
+    }
+    .page-body {
+      font-size: .93rem; line-height: 1.85;
+      color: #3a002e;
+    }
+
+    /* Page number */
+    .page-num {
+      position: absolute; bottom: 16px;
+      font-size: .75rem; color: rgba(160,60,130,0.45);
+      font-style: italic; letter-spacing: 1px;
+    }
+    .page-left .page-num  { right: 20px; }
+    .page-right .page-num { left:  20px; }
+
+    /* Book spine shadow */
+    .book-spine {
+      position: absolute;
+      left: 50%; top: 0; bottom: 0;
+      width: 18px;
+      transform: translateX(-50%);
+      background: linear-gradient(to right, rgba(0,0,0,0.18), rgba(255,107,157,0.08), rgba(0,0,0,0.12));
+      z-index: 10;
+      pointer-events: none;
+    }
+
+    /* Book cover — shown before opening */
+    .book-cover {
+      position: absolute; inset: 0;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #3a0048 0%, #1c0030 60%, #2d0040 100%);
+      border: 2px solid rgba(255,107,157,0.35);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      z-index: 20; cursor: pointer;
+      transition: transform 1.1s cubic-bezier(0.645,0.045,0.355,1), opacity .4s ease;
+      transform-origin: left center;
+      transform-style: preserve-3d;
+      box-shadow: 6px 0 30px rgba(0,0,0,0.5);
+    }
+    .book-cover.opened {
+      transform: rotateY(-180deg);
+      pointer-events: none;
+    }
+    .book-cover::before {
+      content: '';
+      position: absolute; inset: 10px;
+      border: 1px solid rgba(192,132,252,0.2);
+      border-radius: 4px; pointer-events: none;
+    }
+    .cover-title {
+      font-size: 1.6rem; font-weight: 800; letter-spacing: 3px;
+      background: linear-gradient(135deg, #fff 0%, var(--pink) 60%, var(--lavender) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      text-align: center; margin-bottom: 10px; line-height: 1.3;
+    }
+    .cover-subtitle {
+      font-size: .8rem; letter-spacing: 4px; color: rgba(255,180,210,0.55);
+      text-transform: uppercase; margin-bottom: 28px;
+    }
+    .cover-icon { font-size: 3.5rem; margin-bottom: 20px; }
+    .cover-deco {
+      font-size: .75rem; letter-spacing: 2px; color: rgba(192,132,252,0.4);
+    }
+    /* cover open hint */
+    .cover-hint {
+      position: absolute; bottom: 24px;
+      font-size: .78rem; letter-spacing: 2px;
+      color: rgba(255,180,210,0.5);
+      animation: hintPulse 2s ease-in-out infinite;
+    }
+
+    /* Book controls */
+    .book-controls {
+      display: flex; align-items: center; gap: 24px;
+    }
+    .book-btn {
+      background: linear-gradient(135deg, var(--rose), var(--lavender));
+      border: none; border-radius: 999px;
+      width: 52px; height: 52px;
+      font-size: 1.3rem; cursor: pointer; color: #fff;
+      box-shadow: 0 4px 20px rgba(255,107,157,0.4);
+      transition: transform .2s, box-shadow .2s, opacity .2s;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .book-btn:hover { transform: scale(1.1); box-shadow: 0 8px 28px rgba(255,107,157,0.6); }
+    .book-btn:disabled { opacity: .3; cursor: default; transform: none; box-shadow: none; }
+
+    .book-page-indicator {
+      font-size: .85rem; color: rgba(255,180,210,0.6);
+      letter-spacing: 2px; min-width: 90px; text-align: center;
+    }
+
+    /* Page turn shadow overlay */
+    .page-shadow {
+      position: absolute; top: 0; right: 0; bottom: 0;
+      width: 40px;
+      background: linear-gradient(to left, rgba(0,0,0,0.15), transparent);
+      pointer-events: none; border-radius: 0 8px 8px 0; z-index: 5;
+    }
+
+    /* FOOTER */
+    footer {
+      position: relative; z-index: 1; text-align: center; padding: 50px 20px;
+      color: rgba(255,255,255,.3); font-size: .85rem;
+      border-top: 1px solid rgba(255,107,157,.1);
+    }
+    footer span { color: var(--rose); }
+
+    .reveal { opacity: 0; transform: translateY(40px); transition: opacity .7s, transform .7s; }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    @media(max-width:700px){
+      nav { padding: 12px 20px; } .nav-links { gap: 14px; }
+      .envelope { width: 300px; height: 200px; }
+      .letter-paper { padding: 32px 22px 36px; }
+      .book-wrap { width: 100%; }
+      .page-left, .page-right { min-height: 340px; padding: 28px 18px; }
+      .page-title { font-size: 1rem; }
+      .page-body { font-size: .85rem; }
+      .cover-title { font-size: 1.2rem; }
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="stars-canvas"></canvas>
+
+<nav>
+  <div class="nav-logo">✦ ONAISSA ✦</div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#reasons">Reasons</a></li>
+    <li><a href="#games">Games</a></li>
+    <li><a href="#letter">Letter</a></li>
+    <li><a href="#timeline">Our Story</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-avatar">🌙</div>
+  <h1 class="hero-title">Onaissa</h1>
+  <p class="hero-sub">A whole universe wrapped in one person — this page is yours, made with every bit of love I have.</p>
+  <div class="hero-badges">
+    <span class="badge">✨ My Favorite Person</span>
+    <span class="badge">🌙 My Moon</span>
+    <span class="badge">💜 My Everything</span>
+  </div>
+  <a href="#about" class="btn-primary">Explore Your World ↓</a>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <h2 class="section-title reveal">Who Is She?</h2>
+  <p class="section-sub reveal">A little window into the person who owns my heart.</p>
+  <div class="about-grid">
+    <div class="about-card reveal"><div class="icon">🌙</div><h3>Onaissa</h3><p>Her name sounds like a song — soft, unique, unforgettable. Just like her.</p></div>
+    <div class="about-card reveal"><div class="icon">💫</div><h3>Her Energy</h3><p>She lights up every room she walks into without even trying. Pure magic.</p></div>
+    <div class="about-card reveal"><div class="icon">🎨</div><h3>Her World</h3><p>Creative, curious, and full of depth — there's always something new to discover about her.</p></div>
+    <div class="about-card reveal"><div class="icon">💖</div><h3>Her Heart</h3><p>Warm, genuine, and kind in ways that make the world a better place to live in.</p></div>
+    <div class="about-card reveal"><div class="icon">😂</div><h3>Her Laugh</h3><p>The best sound in the entire universe — I'd do anything to hear it every single day.</p></div>
+    <div class="about-card reveal"><div class="icon">🌺</div><h3>Her Presence</h3><p>Being with her feels like finally being home — safe, warm, and exactly where I belong.</p></div>
+  </div>
+</section>
+
+<!-- REASONS -->
+<section id="reasons">
+  <h2 class="section-title reveal">10 Reasons I Love Her</h2>
+  <p class="section-sub reveal">Just ten — in reality the list never ends.</p>
+  <ol class="reasons-list">
+    <li class="reason-item reveal"><p><span class="r-emoji">🌙</span>Her name alone is a poem. Onaissa — rare, beautiful, and absolutely one of a kind.</p></li>
+    <li class="reason-item reveal"><p><span class="r-emoji">😂</span>She can make me laugh harder than anyone else on the planet, often without even trying.</p></li>
+    <li class="reason-item reveal"><p><span class="r-emoji">💪</span>She is stronger than she thinks and braver than she gives herself credit for.</p></li>
+    <li class="reason-item reveal"><p><span class="r-emoji">🎯</span>She cares — deeply and genuinely — about the things and people that matter to her.</p></li>
+    <li class="reason-item reveal"><p><span class="r-emoji">✨</span>She makes ordinary moments feel extraordinary just by being in them.</p></li>
+    <li class="reason-item reveal"><p><span class="r-emoji">🧠</span>Her mind is fascinating — the way she thinks, observes, and sees the world is unlike anyone else.</p></li>
+    <li class="reason-item reveal"><p><span class="r-emoji">🌺</span>She is unapologetically herself, and that confidence is the most beautiful thing.</p></li>
+    <li class="reason-item reveal"><p><span class="r-emoji">💌</span>Even the smallest things she does feel like love letters I'll remember forever.</p></li>
+    <li class="reason-item reveal"><p><span class="r-emoji">🛡️</span>With her, I feel safe enough to be completely myself — no masks, no pretending.</p></li>
+    <li class="reason-item reveal"><p><span class="r-emoji">💜</span>Every single day with her feels like a gift I never want to stop unwrapping.</p></li>
+  </ol>
+</section>
+
+<!-- GAMES -->
+<section id="games">
+  <h2 class="section-title reveal">Games For Onaissa 🎮</h2>
+  <p class="section-sub reveal">Four mini-games made just for you — can you beat them all?</p>
+  <div class="games-grid">
+    <div class="game-card reveal">
+      <h3>💬 Word Scramble</h3>
+      <p>Unscramble love words — with a twist, some are about you!</p>
+      <div id="scramble-word">?????</div>
+      <input id="scramble-input" type="text" placeholder="Your answer…" autocomplete="off"/>
+      <div id="scramble-feedback"></div>
+      <div style="margin-top:10px;color:rgba(255,255,255,.4);font-size:.8rem" id="scramble-hint"></div>
+      <button class="btn-primary" style="margin-top:14px;padding:10px 24px;font-size:.88rem" onclick="scrambleNext()">Next Word →</button>
+      <div style="margin-top:10px;color:var(--pink);font-size:.85rem">Score: <span id="scramble-score">0</span></div>
+    </div>
+    <div class="game-card reveal">
+      <h3>💖 Catch the Hearts</h3>
+      <p>Tap/click the falling hearts before they disappear! Avoid the ⚡ bolts.</p>
+      <div id="catch-score-display">Score: 0 | Lives: ❤️❤️❤️</div>
+      <canvas id="catch-canvas" width="260" height="200"></canvas>
+      <button class="btn-primary" style="padding:10px 24px;font-size:.88rem" id="catch-btn" onclick="catchStart()">Start Game ▶</button>
+    </div>
+    <div class="game-card reveal">
+      <h3>🌙 Memory Match</h3>
+      <p>Flip the cards and match all the pairs — each symbol is about us!</p>
+      <div class="memory-grid" id="mem-grid"></div>
+      <div id="mem-status"></div>
+      <button class="btn-primary" style="margin-top:12px;padding:10px 24px;font-size:.88rem" onclick="memInit()">Shuffle 🔀</button>
+      <div style="margin-top:8px;color:rgba(255,255,255,.4);font-size:.8rem">Flips: <span id="mem-flips">0</span></div>
+    </div>
+    <div class="game-card reveal">
+      <h3>❓ The Onaissa Quiz</h3>
+      <p>How well do you know yourself? (Hint: the answers are all amazing.)</p>
+      <div id="quiz-score">Question 1 / 6</div>
+      <div id="quiz-question"></div>
+      <div class="quiz-options" id="quiz-options"></div>
+      <div id="quiz-feedback"></div>
+      <button class="btn-primary" style="margin-top:12px;padding:10px 24px;font-size:.88rem;display:none" id="quiz-next" onclick="quizNext()">Next ➜</button>
+    </div>
+  </div>
+</section>
+
+<!-- LETTER -->
+<section id="letter">
+  <h2 class="section-title reveal">A Letter For You 💌</h2>
+  <p class="section-sub reveal">Sealed with love — click the envelope to open it.</p>
+  <div class="envelope-scene reveal">
+    <div class="envelope" id="envelope" onclick="openEnvelope()" title="Click to open">
+      <svg viewBox="0 0 420 280" xmlns="[w3.org](http://www.w3.org/2000/svg)">
+        <defs>
+          <linearGradient id="bodyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#3a0048"/><stop offset="100%" stop-color="#1c0030"/>
+          </linearGradient>
+          <linearGradient id="flapGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#4a0055"/><stop offset="100%" stop-color="#2a0040"/>
+          </linearGradient>
+          <linearGradient id="leftGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#380045"/><stop offset="100%" stop-color="#250035"/>
+          </linearGradient>
+          <linearGradient id="rightGrad" x1="100%" y1="0%" x2="0%" y2="0%">
+            <stop offset="0%" stop-color="#380045"/><stop offset="100%" stop-color="#250035"/>
+          </linearGradient>
+          <linearGradient id="bottomGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#2e0040"/><stop offset="100%" stop-color="#1a0028"/>
+          </linearGradient>
+          <radialGradient id="sealGrad" cx="38%" cy="36%" r="60%">
+            <stop offset="0%" stop-color="#ff9dd0"/>
+            <stop offset="60%" stop-color="#dd2277"/>
+            <stop offset="100%" stop-color="#990044"/>
+          </radialGradient>
+          <filter id="glow">
+            <feGaussianBlur stdDeviation="3" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+        <rect x="0" y="0" width="420" height="280" rx="8" ry="8" fill="url(#bodyGrad)" stroke="rgba(255,107,157,0.45)" stroke-width="1.5"/>
+        <polygon points="0,280 420,280 210,130" fill="url(#bottomGrad)" stroke="rgba(255,107,157,0.2)" stroke-width="1"/>
+        <polygon points="0,0 0,280 210,140" fill="url(#leftGrad)" stroke="rgba(255,107,157,0.15)" stroke-width="1"/>
+        <polygon points="420,0 420,280 210,140" fill="url(#rightGrad)" stroke="rgba(255,107,157,0.15)" stroke-width="1"/>
+        <rect x="10" y="10" width="400" height="260" rx="5" ry="5" fill="none" stroke="rgba(192,132,252,0.18)" stroke-width="1" stroke-dasharray="6 4"/>
+        <g class="env-flap-group" id="envFlapGroup">
+          <polygon points="0,0 420,0 210,155" fill="url(#flapGrad)" stroke="rgba(255,107,157,0.45)" stroke-width="1.5"/>
+        </g>
+        <g class="env-seal-group" id="envSealGroup" filter="url(#glow)">
+          <circle cx="210" cy="148" r="28" fill="url(#sealGrad)" stroke="rgba(255,200,220,0.55)" stroke-width="2"/>
+          <circle cx="210" cy="148" r="21" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+          <text x="210" y="157" text-anchor="middle" font-size="20">💜</text>
+        </g>
+      </svg>
+    </div>
+    <p class="env-hint" id="envHint">✦ Click to open ✦</p>
+    <div class="letter-paper" id="letterPaper">
+      <div class="paper-top-fold"></div>
+      <div class="paper-crease"></div>
+      <p class="salutation">Dear Onaissa,</p>
+      <p>I'm not sure exactly when it happened — whether it was in one particular moment or in the quiet accumulation of a hundred small ones — but somewhere along the way you became the person I measure everything good in my life against.</p>
+      <p>You make me want to be better, not because you ask for it, but because being around someone as remarkable as you makes it feel completely worth the effort. Your laugh is the best thing I've ever heard. Your mind is endlessly interesting. Your heart is the kindest place I know.</p>
+      <p>I built this little corner of the internet for you because you deserve to have things made <em>for</em> you — things that say, clearly and without hesitation: <strong>you are loved, you are seen, and you are everything.</strong></p>
+      <p>I love you, Onaissa. Every star on this page is there because of you.</p>
+      <p class="signature">— Always yours 💜</p>
+      <div class="heart-deco">💜 🌙 ✨</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     OUR STORY — INTERACTIVE BOOK
+══════════════════════════════════════ -->
+<section id="timeline">
+  <h2 class="section-title reveal">Our Story ✨</h2>
+  <p class="section-sub reveal">Open the book and flip through every chapter of us.</p>
+
+  <div class="book-scene reveal">
+    <div class="book-wrap">
+      <div class="book" id="book">
+
+        <!-- LEFT page (always shows current left content) -->
+        <div class="page-left" id="pageLeft">
+          <div class="page-shadow"></div>
+          <div class="page-content" id="pageLeftContent">
+            <!-- filled by JS -->
+          </div>
+          <span class="page-num" id="pageNumLeft"></span>
+        </div>
+
+        <!-- RIGHT page (flips) -->
+        <div class="page-right" id="pageRight">
+          <div class="page-content" id="pageRightContent">
+            <!-- filled by JS -->
+          </div>
+          <span class="page-num" id="pageNumRight"></span>
+        </div>
+
+        <!-- Spine -->
+        <div class="book-spine"></div>
+
+        <!-- COVER (sits on top, flips open on click) -->
+        <div class="book-cover" id="bookCover" onclick="openBook()">
+          <div class="cover-icon">📖</div>
+          <div class="cover-title">Our Story</div>
+          <div class="cover-subtitle">A love story in chapters</div>
+          <div class="cover-deco">✦ Onaissa & You ✦</div>
+          <div class="cover-hint">✦ Click to open ✦</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Controls -->
+    <div class="book-controls" id="bookControls" style="opacity:0;transition:opacity .5s">
+      <button class="book-btn" id="btnPrev" onclick="flipPage(-1)" disabled>‹</button>
+      <div class="book-page-indicator" id="bookIndicator">Page 1</div>
+      <button class="book-btn" id="btnNext" onclick="flipPage(1)">›</button>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>Made with <span>♥</span> for <span>Onaissa</span> — every pixel placed with love.</p>
+  <p style="margin-top:8px;font-size:.75rem;opacity:.4">∞ You are loved endlessly ∞</p>
+</footer>
+
+<script>
+/* ─── GLOWING STARS ─── */
+(function(){
+  const c=document.getElementById('stars-canvas'),ctx=c.getContext('2d');
+  const starColors=[
+    {core:'rgba(255,255,255,1)',glow:'rgba(255,220,255,'},
+    {core:'rgba(255,180,220,1)',glow:'rgba(255,107,157,'},
+    {core:'rgba(210,180,255,1)',glow:'rgba(192,132,252,'},
+    {core:'rgba(255,240,160,1)',glow:'rgba(255,215,0,'},
+    {core:'rgba(180,230,255,1)',glow:'rgba(100,180,255,'},
+  ];
+  let stars=[];
+  function resize(){
+    c.width=window.innerWidth;c.height=window.innerHeight;
+    stars=Array.from({length:220},()=>{
+      const col=starColors[Math.floor(Math.random()*starColors.length)];
+      return{x:Math.random()*c.width,y:Math.random()*c.height,r:Math.random()*1.8+0.4,
+             phase:Math.random()*Math.PI*2,speed:Math.random()*.012+.004,color:col,bright:Math.random()<.12};
+    });
+  }
+  resize();window.addEventListener('resize',resize);
+  function drawStar(s,t){
+    const pulse=(Math.sin(s.phase+t*s.speed)+1)/2,alpha=0.3+pulse*0.7;
+    const baseGlow=s.bright?s.r*10:s.r*5,glowR=baseGlow*(0.6+pulse*0.4);
+    if(s.bright){
+      const bloom=ctx.createRadialGradient(s.x,s.y,0,s.x,s.y,glowR*2.2);
+      bloom.addColorStop(0,s.color.glow+(alpha*.35)+')');
+      bloom.addColorStop(0.4,s.color.glow+(alpha*.12)+')');
+      bloom.addColorStop(1,s.color.glow+'0)');
+      ctx.beginPath();ctx.arc(s.x,s.y,glowR*2.2,0,Math.PI*2);ctx.fillStyle=bloom;ctx.fill();
+    }
+    const grad=ctx.createRadialGradient(s.x,s.y,0,s.x,s.y,glowR);
+    grad.addColorStop(0,s.color.glow+(alpha*.9)+')');
+    grad.addColorStop(0.3,s.color.glow+(alpha*.5)+')');
+    grad.addColorStop(1,s.color.glow+'0)');
+    ctx.beginPath();ctx.arc(s.x,s.y,glowR,0,Math.PI*2);ctx.fillStyle=grad;ctx.fill();
+    ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+    ctx.fillStyle=s.color.core.replace('1)',alpha+')');ctx.fill();
+    if(s.bright){
+      const fLen=glowR*1.6,fAlpha=alpha*.35;
+      ctx.save();ctx.globalAlpha=fAlpha;ctx.strokeStyle=s.color.core;
+      ctx.lineWidth=s.r*.5;ctx.lineCap='round';
+      ctx.beginPath();ctx.moveTo(s.x-fLen,s.y);ctx.lineTo(s.x+fLen,s.y);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(s.x,s.y-fLen);ctx.lineTo(s.x,s.y+fLen);ctx.stroke();
+      ctx.restore();
+    }
+  }
+  let t=0;(function loop(){ctx.clearRect(0,0,c.width,c.height);t++;stars.forEach(s=>drawStar(s,t));requestAnimationFrame(loop);})();
+})();
+
+/* ─── FLOATING HEARTS ─── */
+(function(){
+  const emojis=['💜','🌙','✨','💕','💫','🌺','💖'];
+  function spawn(){
+    const el=document.createElement('div');el.className='floating-heart';
+    el.textContent=emojis[Math.floor(Math.random()*emojis.length)];
+    el.style.left=Math.random()*100+'vw';
+    el.style.animationDuration=(Math.random()*8+7)+'s';
+    el.style.fontSize=(Math.random()*.8+.8)+'rem';
+    document.body.appendChild(el);setTimeout(()=>el.remove(),16000);
+  }
+  setInterval(spawn,2200);
+})();
+
+/* ─── SCROLL REVEAL ─── */
+(function(){
+  const obs=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});
+  },{threshold:.1});
+  document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+})();
+
+/* ─── ENVELOPE ─── */
+function openEnvelope(){
+  const env=document.getElementById('envelope');
+  const paper=document.getElementById('letterPaper');
+  const hint=document.getElementById('envHint');
+  if(env.classList.contains('opened'))return;
+  env.classList.add('opened');hint.classList.add('hidden');
+  setTimeout(()=>paper.classList.add('visible'),600);
+  const emojis=['💜','✨','💖','🌙','💕'];
+  for(let i=0;i<12;i++){
+    setTimeout(()=>{
+      const el=document.createElement('div');el.className='floating-heart';
+      el.textContent=emojis[Math.floor(Math.random()*emojis.length)];
+      el.style.left=(30+Math.random()*40)+'vw';
+      el.style.animationDuration=(Math.random()*3+3)+'s';
+      el.style.fontSize=(Math.random()*1+1)+'rem';
+      document.body.appendChild(el);setTimeout(()=>el.remove(),7000);
+    },i*120);
+  }
+}
+
+/* ══════════════════════════════════════
+   INTERACTIVE BOOK — OUR STORY
+══════════════════════════════════════ */
+const bookPages = [
+  // Each spread = { left, right }
+  // left/right = { chapter, icon, title, body, pageNum }
+  {
+    left: {
+      chapter: 'Prologue',
+      icon: '🌌',
+      title: 'Before We Met',
+      body: 'The universe had been quietly arranging things for a long time — putting the right people in the right places at the right moments. Neither of us knew it yet, but a story was already being written.',
+      pageNum: '1'
+    },
+    right: {
+      chapter: 'Chapter One',
+      icon: '👀',
+      title: 'The First Time We Met',
+      body: 'Something clicked into place the moment I noticed you. Nothing dramatic — just a quiet, certain feeling, like recognising something I didn\'t know I\'d been looking for. The universe smiled.',
+      pageNum: '2'
+    }
+  },
+  {
+    left: {
+      chapter: 'Chapter Two',
+      icon: '💬',
+      title: 'The First Conversation',
+      body: 'We talked like we\'d known each other for years. Time disappeared completely. Every sentence felt easy, every silence comfortable. I didn\'t want it to stop — I still don\'t.',
+      pageNum: '3'
+    },
+    right: {
+      chapter: 'Chapter Three',
+      icon: '😂',
+      title: 'The First Time You Made Me Laugh',
+      body: 'It caught me off guard — a real, full laugh that I couldn\'t hold back. That was the moment I knew you were different. Nobody makes me laugh the way you do. Nobody even comes close.',
+      pageNum: '4'
+    }
+  },
+  {
+    left: {
+      chapter: 'Chapter Four',
+      icon: '💜',
+      title: 'When I Knew',
+      body: 'There was one specific second. I looked at you — really looked — and thought: yeah, it\'s you. It\'s definitely you. No doubt, no hesitation. Just a quiet, unshakeable certainty.',
+      pageNum: '5'
+    },
+    right: {
+      chapter: 'Chapter Five',
+      icon: '🌙',
+      title: 'The Little Moments',
+      body: 'It\'s not just the big things. It\'s the small ones — the way you say certain words, the look you give when something makes you happy, the way everything feels lighter when you\'re around.',
+      pageNum: '6'
+    }
+  },
+  {
+    left: {
+      chapter: 'Chapter Six',
+      icon: '🌺',
+      title: 'What You Don\'t See',
+      body: 'You don\'t always see how extraordinary you are — how your presence changes the energy of a room, how your kindness leaves marks on people, how rare it is to be someone like you. But I see it.',
+      pageNum: '7'
+    },
+    right: {
+      chapter: 'Chapter Seven',
+      icon: '✨',
+      title: 'Every Day With You',
+      body: 'Ordinary days become something else entirely when they\'re yours. A regular afternoon, a quiet moment, a random conversation — all of it feels like a gift I never want to stop unwrapping.',
+      pageNum: '8'
+    }
+  },
+  {
+    left: {
+      chapter: 'Chapter Eight',
+      icon: '🛡️',
+      title: 'Safe',
+      body: 'With you, I don\'t have to pretend or perform. I can just exist, exactly as I am — no masks, no editing. That kind of safety is rare. You give it to me without even trying.',
+      pageNum: '9'
+    },
+    right: {
+      chapter: 'Forever Chapter',
+      icon: '💌',
+      title: 'Today & Every Day After',
+      body: 'Here we are — and every day with you feels like the best chapter yet. I don\'t know what comes next, but I know I want to write every page of it with you. I love you, Onaissa. ∞',
+      pageNum: '10'
+    }
+  }
+];
+
+let currentSpread = 0;
+let isFlipping = false;
+let bookOpened = false;
+
+function renderSpread(spreadIndex, animate = false) {
+  const spread = bookPages[spreadIndex];
+  const leftContent  = document.getElementById('pageLeftContent');
+  const rightContent = document.getElementById('pageRightContent');
+  const numLeft  = document.getElementById('pageNumLeft');
+  const numRight = document.getElementById('pageNumRight');
+
+  function pageHTML(p) {
+    return `
+      <div class="page-chapter">${p.chapter}</div>
+      <span class="page-icon">${p.icon}</span>
+      <div class="page-title">${p.title}</div>
+      <p class="page-body">${p.body}</p>
+    `;
+  }
+
+  if (animate) {
+    const pageRight = document.getElementById('pageRight');
+    pageRight.classList.add('flipping');
+    setTimeout(() => {
+      leftContent.innerHTML  = pageHTML(spread.left);
+      rightContent.innerHTML = pageHTML(spread.right);
+      numLeft.textContent  = spread.left.pageNum;
+      numRight.textContent = spread.right.pageNum;
+      pageRight.classList.remove('flipping');
+    }, 430); // swap content at mid-flip
+  } else {
+    leftContent.innerHTML  = pageHTML(spread.left);
+    rightContent.innerHTML = pageHTML(spread.right);
+    numLeft.textContent  = spread.left.pageNum;
+    numRight.textContent = spread.right.pageNum;
+  }
+
+  // Update buttons
+  document.getElementById('btnPrev').disabled = spreadIndex === 0;
+  document.getElementById('btnNext').disabled = spreadIndex === bookPages.length - 1;
+  document.getElementById('bookIndicator').textContent =
+    `Spread ${spreadIndex + 1} of ${bookPages.length}`;
+}
+
+function openBook() {
+  if (bookOpened) return;
+  bookOpened = true;
+  const cover = document.getElementById('bookCover');
+  cover.classList.add('opened');
+  // Show controls after cover finishes flipping
+  setTimeout(() => {
+    const controls = document.getElementById('bookControls');
+    controls.style.opacity = '1';
+    renderSpread(0, false);
+    // Sprinkle hearts
+    const emojis = ['📖','💜','✨','🌙'];
+    for (let i = 0; i < 8; i++) {
+      setTimeout(() => {
+        const el = document.createElement('div');
+        el.className = 'floating-heart';
+        el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+        el.style.left = (20 + Math.random() * 60) + 'vw';
+        el.style.animationDuration = (Math.random() * 3 + 3) + 's';
+        el.style.fontSize = (Math.random() * 1 + 0.9) + 'rem';
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 7000);
+      }, i * 100);
+    }
+  }, 900);
+}
+
+function flipPage(dir) {
+  if (isFlipping) return;
+  const next = currentSpread + dir;
+  if (next < 0 || next >= bookPages.length) return;
+  isFlipping = true;
+  currentSpread = next;
+  renderSpread(currentSpread, true);
+  setTimeout(() => { isFlipping = false; }, 900);
+}
+
+// Init first spread (hidden until book opens)
+renderSpread(0, false);
+
+/* ══════ GAME 1: WORD SCRAMBLE ══════ */
+const scrambleWords=[
+  {word:'ONAISSA',hint:'Her beautiful name 💜'},
+  {word:'MOONLIGHT',hint:'She glows like this 🌙'},
+  {word:'ADORE',hint:'What I do endlessly ✨'},
+  {word:'GALAXY',hint:'Her energy fills a whole one 💫'},
+  {word:'CHERISH',hint:'To hold something precious 💖'},
+  {word:'FOREVER',hint:'How long I\'ll love her ♾️'},
+  {word:'RADIANT',hint:'Her smile in one word ☀️'},
+];
+let scrambleIdx=0,scrambleScore=0;
+function shuffle(str){
+  const a=str.split('');
+  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
+  const s=a.join('');return s===str?shuffle(str):s;
+}
+function scrambleLoad(){
+  const e=scrambleWords[scrambleIdx%scrambleWords.length];
+  document.getElementById('scramble-word').textContent=shuffle(e.word);
+  document.getElementById('scramble-feedback').textContent='';
+  document.getElementById('scramble-hint').textContent='Hint: '+e.hint;
+  document.getElementById('scramble-input').value='';
+}
+function scrambleNext(){scrambleIdx++;scrambleLoad();}
+document.getElementById('scramble-input').addEventListener('keyup',function(){
+  const e=scrambleWords[scrambleIdx%scrambleWords.length];
+  if(this.value.toUpperCase()===e.word){
+    scrambleScore++;
+    document.getElementById('scramble-score').textContent=scrambleScore;
+    document.getElementById('scramble-feedback').textContent='🎉 Correct! +1';
+    document.getElementById('scramble-feedback').style.color='#5cdb95';
+    setTimeout(scrambleNext,900);
+  }
+});
+scrambleLoad();
+
+/* ══════ GAME 2: CATCH HEARTS ══════ */
+(function(){
+  const canvas=document.getElementById('catch-canvas'),ctx=canvas.getContext('2d');
+  const btn=document.getElementById('catch-btn'),display=document.getElementById('catch-score-display');
+  let items=[],score=0,lives=3,raf=null,running=false,spawnTimer=0;
+  function drawItem(it){ctx.font=it.size+'px serif';ctx.fillText(it.emoji,it.x,it.y);}
+  function tick(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);spawnTimer++;
+    if(spawnTimer%38===0){
+      const bad=Math.random()<.22;
+      items.push({emoji:bad?'⚡':(Math.random()<.5?'💖':'💜'),x:Math.random()*(canvas.width-30)+10,y:-20,speed:Math.random()*1.8+1.2,size:22,bad});
+    }
+    items.forEach(it=>{it.y+=it.speed;drawItem(it);});
+    items=items.filter(it=>{if(it.y>canvas.height+20){if(!it.bad){lives--;updateDisplay();}return false;}return true;});
+    if(lives<=0){endGame();return;}
+    raf=requestAnimationFrame(tick);
+  }
+  function updateDisplay(){const h=['❤️','❤️','❤️'].slice(0,lives).join('')||'💔';display.textContent=`Score: ${score} | Lives: ${h}`;}
+  window.catchStart=function(){
+    if(running)cancelAnimationFrame(raf);
+    items=[];score=0;lives=3;spawnTimer=0;running=true;
+    btn.textContent='Restart 🔄';updateDisplay();raf=requestAnimationFrame(tick);
+  };
+  function endGame(){
+    running=false;cancelAnimationFrame(raf);ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.fillStyle='rgba(255,107,157,.9)';ctx.font='bold 18px sans-serif';ctx.textAlign='center';
+    ctx.fillText('Game Over! 💜',canvas.width/2,canvas.height/2-10);
+    ctx.font='14px sans-serif';ctx.fillText('Score: '+score,canvas.width/2,canvas.height/2+18);
+    ctx.textAlign='left';display.textContent=`Final Score: ${score}`;btn.textContent='Play Again ▶';
+  }
+  canvas.addEventListener('click',function(e){
+    if(!running)return;
+    const rect=canvas.getBoundingClientRect();
+    const mx=(e.clientX-rect.left)*(canvas.width/rect.width);
+    const my=(e.clientY-rect.top)*(canvas.height/rect.height);
+    items=items.filter(it=>{
+      const dx=mx-it.x-it.size/2,dy=my-it.y-it.size/2;
+      if(Math.sqrt(dx*dx+dy*dy)<it.size){if(it.bad){lives--;updateDisplay();}else{score++;updateDisplay();}return false;}
+      return true;
+    });
+  });
+})();
+
+/* ══════ GAME 3: MEMORY MATCH ══════ */
+(function(){
+  const symbols=['🌙','💜','✨','🌺','💖','💫','🎶','🦋'];
+  let board=[],flipped=[],matched=0,flips=0,busy=false;
+  window.memInit=function(){
+    const pairs=[...symbols,...symbols];pairs.sort(()=>Math.random()-.5);
+    board=pairs;matched=0;flipped=[];flips=0;busy=false;
+    document.getElementById('mem-flips').textContent=0;
+    document.getElementById('mem-status').textContent='';
+    const grid=document.getElementById('mem-grid');grid.innerHTML='';
+    pairs.forEach((sym,i)=>{
+      const btn=document.createElement('button');
+      btn.className='mem-card';btn.dataset.idx=i;btn.dataset.sym=sym;btn.textContent=sym;
+      btn.addEventListener('click',memFlip);grid.appendChild(btn);
+    });
+  };
+  function memFlip(e){
+    if(busy)return;const btn=e.currentTarget;
+    if(btn.classList.contains('matched')||btn.classList.contains('flipped'))return;
+    btn.classList.add('flipped');flipped.push(btn);
+    if(flipped.length===2){
+      flips++;document.getElementById('mem-flips').textContent=flips;busy=true;
+      setTimeout(()=>{
+        const[a,b]=flipped;
+        if(a.dataset.sym===b.dataset.sym){
+          a.classList.add('matched');b.classList.add('matched');
+          a.classList.remove('flipped');b.classList.remove('flipped');
+          matched+=2;
+          if(matched===board.length)document.getElementById('mem-status').textContent=`🎉 All matched in ${flips} flips!`;
+        }else{a.classList.remove('flipped');b.classList.remove('flipped');}
+        flipped=[];busy=false;
+      },700);
+    }
+  }
+  window.memInit();
+})();
+
+/* ══════ GAME 4: QUIZ ══════ */
+(function(){
+  const questions=[
+    {q:"What does the name 'Onaissa' make you feel?",opts:["Nothing special","Pure magic and warmth 💜","Kind of confused","Sleepy"],correct:1},
+    {q:"What's your best quality?",opts:["Being average","Your kindness and your laugh 😂💖","Probably nothing","Being too loud"],correct:1},
+    {q:"How many people in the world are as amazing as you?",opts:["Millions","Thousands","Hundreds","Just one — you 🌙"],correct:3},
+    {q:"What happens when you smile?",opts:["Nothing really","The world briefly pauses ✨","People look away","Hard to say"],correct:1},
+    {q:"What do you deserve every single day?",opts:["Basic respect only","Love, joy, and all good things 💜","To be ignored","Hard work with no reward"],correct:1},
+    {q:"Finish the sentence: Onaissa is…",opts:["…just a person","…okay I guess","…absolutely extraordinary 🌟","…still figuring things out"],correct:2},
+  ];
+  let qIdx=0,qScore=0;
+  function quizLoad(){
+    if(qIdx>=questions.length){
+      document.getElementById('quiz-question').textContent=`🎉 You scored ${qScore}/${questions.length}! Perfect — just like you. 💜`;
+      document.getElementById('quiz-options').innerHTML='';
+      document.getElementById('quiz-score').textContent='Complete!';
+      document.getElementById('quiz-next').style.display='none';
+      document.getElementById('quiz-feedback').textContent='';
+      return;
+    }
+    const q=questions[qIdx];
+    document.getElementById('quiz-score').textContent=`Question ${qIdx+1} / ${questions.length}`;
+    document.getElementById('quiz-question').textContent=q.q;
+    document.getElementById('quiz-feedback').textContent='';
+    document.getElementById('quiz-next').style.display='none';
+    const optBox=document.getElementById('quiz-options');optBox.innerHTML='';
+    q.opts.forEach((opt,i)=>{
+      const btn=document.createElement('button');btn.className='quiz-opt';btn.textContent=opt;
+      btn.addEventListener('click',()=>{
+        if(btn.classList.contains('correct')||btn.classList.contains('wrong'))return;
+        Array.from(optBox.children).forEach(b=>b.style.pointerEvents='none');
+        if(i===q.correct){btn.classList.add('correct');document.getElementById('quiz-feedback').textContent='✅ That\'s right! 💜';qScore++;}
+        else{btn.classList.add('wrong');optBox.children[q.correct].classList.add('correct');document.getElementById('quiz-feedback').textContent='❌ Not quite — but you\'re still perfect.';}
+        document.getElementById('quiz-next').style.display='inline-block';
+      });
+      optBox.appendChild(btn);
+    });
+  }
+  window.quizNext=function(){qIdx++;quizLoad();};
+  quizLoad();
+})();
+</script>
+</body>
+</html>
