@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BossCostumes.com — For Sale</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --neon-cyan: #00f5ff;
+    --neon-gold: #ffd700;
+    --neon-pink: #ff2d78;
+    --dark: #020408;
+    --mid: #050d18;
+    --panel: rgba(0,245,255,0.04);
+    --border: rgba(0,245,255,0.18);
+    --text: #c8f0ff;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--dark);
+    color: var(--text);
+    font-family: 'Rajdhani', sans-serif;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* CUSTOM CURSOR */
+  .cursor {
+    width: 12px; height: 12px;
+    background: var(--neon-cyan);
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s, width 0.2s, height 0.2s;
+    box-shadow: 0 0 10px var(--neon-cyan), 0 0 30px var(--neon-cyan);
+    mix-blend-mode: screen;
+  }
+  .cursor-ring {
+    width: 36px; height: 36px;
+    border: 1.5px solid var(--neon-cyan);
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%, -50%);
+    transition: transform 0.15s ease, width 0.3s, height 0.3s;
+    opacity: 0.5;
+  }
+
+  /* GRID BACKGROUND */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,245,255,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,245,255,0.04) 1px, transparent 1px);
+    background-size: 50px 50px;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* SCANLINES */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.08) 2px,
+      rgba(0,0,0,0.08) 4px
+    );
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  /* CANVAS */
+  #particles { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+
+  section { position: relative; z-index: 2; }
+
+  /* ========== HERO ========== */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 40px 20px;
+    perspective: 1000px;
+    overflow: hidden;
+  }
+
+  .hero-badge {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 4px;
+    color: var(--neon-cyan);
+    border: 1px solid var(--border);
+    padding: 6px 18px;
+    margin-bottom: 32px;
+    animation: fadeSlideDown 0.8s ease both;
+    background: rgba(0,245,255,0.06);
+    clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
+  }
+
+  .hero-title {
+    font-family: 'Orbitron', monospace;
+    font-size: clamp(3rem, 10vw, 8rem);
+    font-weight: 900;
+    line-height: 0.9;
+    letter-spacing: -2px;
+    margin-bottom: 12px;
+    animation: fadeSlideDown 1s 0.2s ease both;
+    position: relative;
+  }
+
+  .hero-title span.boss {
+    display: block;
+    background: linear-gradient(135deg, #fff 30%, var(--neon-cyan) 60%, var(--neon-gold) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 0 30px rgba(0,245,255,0.4));
+  }
+
+  .hero-title span.costumes {
+    display: block;
+    background: linear-gradient(135deg, var(--neon-gold) 0%, var(--neon-pink) 60%, #fff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 0 30px rgba(255,215,0,0.4));
+  }
+
+  .hero-domain {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: clamp(1rem, 3vw, 1.6rem);
+    color: rgba(200,240,255,0.5);
+    margin-bottom: 40px;
+    letter-spacing: 6px;
+    animation: fadeSlideDown 1s 0.4s ease both;
+  }
+
+  .hero-domain em {
+    color: var(--neon-gold);
+    font-style: normal;
+    text-shadow: 0 0 12px var(--neon-gold);
+  }
+
+  .hero-3d-card {
+    width: min(520px, 90vw);
+    background: var(--panel);
+    border: 1px solid var(--border);
+    padding: 36px 40px;
+    margin-bottom: 48px;
+    animation: fadeSlideUp 1s 0.6s ease both;
+    transform-style: preserve-3d;
+    position: relative;
+    clip-path: polygon(20px 0%, 100% 0%, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0% 100%, 0% 20px);
+    backdrop-filter: blur(10px);
+  }
+
+  .hero-3d-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(0,245,255,0.08) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .hero-3d-card::after {
+    content: '';
+    position: absolute;
+    top: -1px; left: -1px; right: -1px; bottom: -1px;
+    background: linear-gradient(135deg, var(--neon-cyan), transparent, var(--neon-gold));
+    z-index: -1;
+    clip-path: polygon(20px 0%, 100% 0%, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0% 100%, 0% 20px);
+    opacity: 0.3;
+  }
+
+  .price-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 4px;
+    color: var(--neon-cyan);
+    opacity: 0.7;
+    margin-bottom: 8px;
+  }
+
+  .price-value {
+    font-family: 'Orbitron', monospace;
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    font-weight: 900;
+    color: var(--neon-gold);
+    text-shadow: 0 0 20px rgba(255,215,0,0.5), 0 0 60px rgba(255,215,0,0.2);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .price-sub {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.75rem;
+    color: rgba(200,240,255,0.4);
+    letter-spacing: 2px;
+  }
+
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent);
+    margin: 28px 0;
+    opacity: 0.4;
+  }
+
+  .hero-tagline {
+    font-size: 1.15rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    color: var(--text);
+    opacity: 0.85;
+    line-height: 1.6;
+  }
+
+  .cta-row {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    justify-content: center;
+    animation: fadeSlideUp 1s 0.8s ease both;
+  }
+
+  .btn {
+    font-family: 'Orbitron', monospace;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 3px;
+    padding: 16px 36px;
+    border: none;
+    cursor: none;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+    clip-path: polygon(12px 0%, 100% 0%, calc(100% - 12px) 100%, 0% 100%);
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--neon-cyan), #0099bb);
+    color: #020408;
+    box-shadow: 0 0 24px rgba(0,245,255,0.4), 0 0 60px rgba(0,245,255,0.15);
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 0 40px rgba(0,245,255,0.6), 0 0 80px rgba(0,245,255,0.25);
+  }
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--neon-gold);
+    border: 1.5px solid var(--neon-gold);
+    box-shadow: 0 0 16px rgba(255,215,0,0.2);
+  }
+
+  .btn-secondary:hover {
+    background: rgba(255,215,0,0.08);
+    transform: translateY(-3px);
+    box-shadow: 0 0 30px rgba(255,215,0,0.4);
+  }
+
+  /* ========== STATS ========== */
+  .stats {
+    padding: 80px 20px;
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  .stat-card {
+    width: 220px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    padding: 32px 24px;
+    text-align: center;
+    position: relative;
+    clip-path: polygon(16px 0%, 100% 0%, calc(100% - 16px) 100%, 0% 100%);
+    transition: transform 0.3s, box-shadow 0.3s;
+    backdrop-filter: blur(8px);
+  }
+
+  .stat-card:hover {
+    transform: translateY(-8px) rotateX(5deg);
+    box-shadow: 0 20px 60px rgba(0,245,255,0.15);
+  }
+
+  .stat-icon {
+    font-size: 1.8rem;
+    margin-bottom: 12px;
+    filter: drop-shadow(0 0 8px var(--neon-cyan));
+  }
+
+  .stat-num {
+    font-family: 'Orbitron', monospace;
+    font-size: 2.2rem;
+    font-weight: 900;
+    color: var(--neon-cyan);
+    text-shadow: 0 0 16px rgba(0,245,255,0.5);
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-size: 0.85rem;
+    letter-spacing: 2px;
+    color: rgba(200,240,255,0.5);
+    margin-top: 6px;
+    text-transform: uppercase;
+  }
+
+  /* ========== WHY BUY ========== */
+  .why {
+    padding: 80px 20px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 5px;
+    color: var(--neon-cyan);
+    text-align: center;
+    margin-bottom: 12px;
+    opacity: 0.7;
+  }
+
+  .section-title {
+    font-family: 'Orbitron', monospace;
+    font-size: clamp(1.8rem, 4vw, 3rem);
+    font-weight: 900;
+    text-align: center;
+    margin-bottom: 60px;
+    background: linear-gradient(135deg, #fff 40%, var(--neon-cyan));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+  }
+
+  .feature-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    padding: 36px 32px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s, box-shadow 0.3s;
+    backdrop-filter: blur(8px);
+  }
+
+  .feature-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; width: 3px; height: 100%;
+    background: linear-gradient(180deg, var(--neon-cyan), var(--neon-gold));
+  }
+
+  .feature-card:hover {
+    transform: translateX(6px) translateY(-4px);
+    box-shadow: -6px 12px 40px rgba(0,245,255,0.12);
+  }
+
+  .feature-num {
+    font-family: 'Orbitron', monospace;
+    font-size: 3rem;
+    font-weight: 900;
+    color: rgba(0,245,255,0.08);
+    position: absolute;
+    top: 16px;
+    right: 20px;
+    line-height: 1;
+  }
+
+  .feature-icon { font-size: 2rem; margin-bottom: 16px; }
+
+  .feature-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--neon-gold);
+    margin-bottom: 12px;
+    letter-spacing: 1px;
+  }
+
+  .feature-desc {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: rgba(200,240,255,0.65);
+    font-weight: 400;
+  }
+
+  /* ========== WHAT'S INCLUDED ========== */
+  .included {
+    padding: 80px 20px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .included-list {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 14px;
+    margin-top: 20px;
+  }
+
+  .included-list li {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    padding: 16px 20px;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    transition: background 0.2s;
+  }
+
+  .included-list li:hover { background: rgba(0,245,255,0.07); }
+
+  .check {
+    width: 22px; height: 22px; flex-shrink: 0;
+    background: var(--neon-cyan);
+    color: #020408;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 900;
+    clip-path: polygon(4px 0%, 100% 0%, calc(100% - 4px) 100%, 0% 100%);
+  }
+
+  /* ========== CONTACT ========== */
+  .contact {
+    padding: 100px 20px;
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .contact-box {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    padding: 60px 40px;
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(12px);
+  }
+
+  .contact-box::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(0,245,255,0.06) 0%, transparent 50%, rgba(255,215,0,0.04) 100%);
+  }
+
+  .contact-box::after {
+    content: 'ACQUIRE';
+    position: absolute;
+    font-family: 'Orbitron', monospace;
+    font-size: 8rem;
+    font-weight: 900;
+    color: rgba(0,245,255,0.03);
+    bottom: -20px;
+    right: 10px;
+    letter-spacing: -4px;
+    pointer-events: none;
+    line-height: 1;
+  }
+
+  .contact-title {
+    font-family: 'Orbitron', monospace;
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
+    font-weight: 900;
+    color: #fff;
+    margin-bottom: 16px;
+    position: relative;
+  }
+
+  .contact-sub {
+    font-size: 1.05rem;
+    color: rgba(200,240,255,0.55);
+    margin-bottom: 48px;
+    line-height: 1.7;
+    position: relative;
+  }
+
+  .contact-links {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: center;
+    position: relative;
+  }
+
+  .contact-link {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 18px 32px;
+    border: 1px solid var(--border);
+    background: rgba(0,0,0,0.3);
+    text-decoration: none;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 1rem;
+    letter-spacing: 2px;
+    width: 100%;
+    max-width: 420px;
+    transition: all 0.25s;
+    clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
+    justify-content: center;
+  }
+
+  .contact-link.phone {
+    color: var(--neon-cyan);
+    border-color: rgba(0,245,255,0.25);
+  }
+  .contact-link.phone:hover {
+    background: rgba(0,245,255,0.1);
+    border-color: var(--neon-cyan);
+    box-shadow: 0 0 24px rgba(0,245,255,0.2);
+    transform: translateY(-2px);
+  }
+
+  .contact-link.email {
+    color: var(--neon-gold);
+    border-color: rgba(255,215,0,0.25);
+  }
+  .contact-link.email:hover {
+    background: rgba(255,215,0,0.08);
+    border-color: var(--neon-gold);
+    box-shadow: 0 0 24px rgba(255,215,0,0.2);
+    transform: translateY(-2px);
+  }
+
+  .contact-icon { font-size: 1.2rem; }
+
+  /* ========== FOOTER ========== */
+  footer {
+    padding: 40px 20px;
+    text-align: center;
+    border-top: 1px solid var(--border);
+    position: relative;
+    z-index: 2;
+  }
+
+  .footer-domain {
+    font-family: 'Orbitron', monospace;
+    font-size: 1.4rem;
+    font-weight: 900;
+    letter-spacing: 3px;
+    background: linear-gradient(135deg, var(--neon-cyan), var(--neon-gold));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 8px;
+  }
+
+  .footer-made {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 3px;
+    color: rgba(200,240,255,0.3);
+    margin-top: 20px;
+  }
+
+  .footer-made span {
+    color: var(--neon-cyan);
+    text-shadow: 0 0 8px rgba(0,245,255,0.5);
+  }
+
+  /* ========== SCROLL LINE ========== */
+  .scroll-line {
+    position: fixed;
+    top: 0; left: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--neon-cyan), var(--neon-gold), var(--neon-pink));
+    z-index: 999;
+    transition: width 0.1s;
+    box-shadow: 0 0 10px rgba(0,245,255,0.6);
+  }
+
+  /* ========== FLOATING ELEMENTS ========== */
+  .floating-hex {
+    position: fixed;
+    width: 120px; height: 140px;
+    opacity: 0.04;
+    pointer-events: none;
+    z-index: 0;
+    animation: floatHex 8s ease-in-out infinite;
+  }
+
+  .fh1 { top: 15%; left: 5%; animation-delay: 0s; }
+  .fh2 { top: 60%; right: 8%; animation-delay: -3s; }
+  .fh3 { top: 40%; left: 2%; animation-delay: -6s; }
+
+  @keyframes floatHex {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-20px) rotate(10deg); }
+  }
+
+  /* ========== CORNER ACCENTS ========== */
+  .corner-tl, .corner-br {
+    position: fixed;
+    width: 60px; height: 60px;
+    pointer-events: none;
+    z-index: 3;
+  }
+  .corner-tl { top: 20px; left: 20px; border-top: 2px solid var(--neon-cyan); border-left: 2px solid var(--neon-cyan); opacity: 0.5; }
+  .corner-br { bottom: 20px; right: 20px; border-bottom: 2px solid var(--neon-gold); border-right: 2px solid var(--neon-gold); opacity: 0.5; }
+
+  /* ========== ANIMATIONS ========== */
+  @keyframes fadeSlideDown {
+    from { opacity: 0; transform: translateY(-30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeSlideUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes pulse-glow {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+  }
+
+  /* SECTION REVEAL */
+  .reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* HORIZONTAL LINE DECORATORS */
+  .h-line {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    justify-content: center;
+    margin-bottom: 60px;
+  }
+  .h-line::before, .h-line::after {
+    content: '';
+    flex: 1;
+    max-width: 120px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--neon-cyan));
+    opacity: 0.5;
+  }
+  .h-line::after { background: linear-gradient(90deg, var(--neon-cyan), transparent); }
+  .h-line-dot {
+    width: 6px; height: 6px;
+    background: var(--neon-cyan);
+    transform: rotate(45deg);
+    box-shadow: 0 0 10px var(--neon-cyan);
+  }
+</style>
+</head>
+<body>
+
+<!-- Cursor -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- Scroll progress -->
+<div class="scroll-line" id="scrollLine"></div>
+
+<!-- Corner accents -->
+<div class="corner-tl"></div>
+<div class="corner-br"></div>
+
+<!-- Particle canvas -->
+<canvas id="particles"></canvas>
+
+<!-- Floating hexagons -->
+<svg class="floating-hex fh1" viewBox="0 0 100 115" fill="none"><polygon points="50,2 97,27 97,77 50,102 3,77 3,27" stroke="#00f5ff" stroke-width="2"/></svg>
+<svg class="floating-hex fh2" viewBox="0 0 100 115" fill="none"><polygon points="50,2 97,27 97,77 50,102 3,77 3,27" stroke="#ffd700" stroke-width="2"/></svg>
+<svg class="floating-hex fh3" viewBox="0 0 100 115" fill="none"><polygon points="50,2 97,27 97,77 50,102 3,77 3,27" stroke="#ff2d78" stroke-width="2"/></svg>
+
+<!-- ========== HERO ========== -->
+<section class="hero">
+  <div class="hero-badge">⚡ PREMIUM DOMAIN FOR SALE ⚡</div>
+
+  <h1 class="hero-title">
+    <span class="boss">BOSS</span>
+    <span class="costumes">COSTUMES</span>
+  </h1>
+
+  <p class="hero-domain"><em>.COM</em></p>
+
+  <div class="hero-3d-card" id="card3d">
+    <div class="price-label">// ASKING PRICE</div>
+    <div class="price-value">MAKE OFFER</div>
+    <div class="price-sub">SERIOUS INQUIRIES ONLY — CONTACT BELOW</div>
+    <div class="divider"></div>
+    <p class="hero-tagline">A commanding, memorable brand asset ready to dominate the costume industry. The domain says it all — BOSS speaks authority; COSTUMES speaks niche.</p>
+  </div>
+
+  <div class="cta-row">
+    <a href="#contact" class="btn btn-primary">MAKE AN OFFER</a>
+    <a href="#features" class="btn btn-secondary">WHY THIS DOMAIN</a>
+  </div>
+</section>
+
+<!-- ========== STATS ========== -->
+<section class="stats reveal">
+  <div class="stat-card">
+    <div class="stat-icon">🎭</div>
+    <div class="stat-num">$5B+</div>
+    <div class="stat-label">Costume Market Size</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon">🔥</div>
+    <div class="stat-num">.COM</div>
+    <div class="stat-label">Premium TLD</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon">⚡</div>
+    <div class="stat-num">2-WORD</div>
+    <div class="stat-label">Short & Catchy</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon">🌍</div>
+    <div class="stat-num">GLOBAL</div>
+    <div class="stat-label">Brand Potential</div>
+  </div>
+</section>
+
+<!-- ========== WHY THIS DOMAIN ========== -->
+<section class="why reveal" id="features">
+  <div class="section-label">// STRATEGIC VALUE</div>
+  <h2 class="section-title">WHY BOSSCOSTUMES.COM?</h2>
+  <div class="h-line"><div class="h-line-dot"></div></div>
+
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-num">01</div>
+      <div class="feature-icon">🏆</div>
+      <div class="feature-title">AUTHORITY BRAND NAME</div>
+      <p class="feature-desc">"Boss" signals leadership, dominance, and premium quality. Paired with "Costumes," this instantly positions any business as the #1 destination in the niche.</p>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-num">02</div>
+      <div class="feature-icon">🧠</div>
+      <div class="feature-title">INSTANTLY MEMORABLE</div>
+      <p class="feature-desc">Short, punchy, and impossible to forget. Two powerful words that roll off the tongue — no hyphens, no numbers, no confusion.</p>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-num">03</div>
+      <div class="feature-icon">🎯</div>
+      <div class="feature-title">PERFECT KEYWORD MATCH</div>
+      <p class="feature-desc">Exact-match domain names carry enormous SEO weight. Customers searching for costumes online will find you first — organically, every time.</p>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-num">04</div>
+      <div class="feature-icon">📈</div>
+      <div class="feature-title">BILLION-DOLLAR INDUSTRY</div>
+      <p class="feature-desc">The global costume market exceeds $5 billion and grows every year. Halloween, cosplay, theater, events — the opportunities are limitless.</p>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-num">05</div>
+      <div class="feature-icon">💎</div>
+      <div class="feature-title">PREMIUM .COM EXTENSION</div>
+      <p class="feature-desc">.com domains are the gold standard. They command trust, credibility, and higher valuations. This isn't just a domain — it's a digital property asset.</p>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-num">06</div>
+      <div class="feature-icon">🚀</div>
+      <div class="feature-title">READY TO LAUNCH</div>
+      <p class="feature-desc">Skip the branding phase. Buy this domain and launch an eCommerce store, marketplace, or brand the same day. The name does the heavy lifting.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ========== WHAT'S INCLUDED ========== -->
+<section class="included reveal">
+  <div class="section-label">// WHAT YOU GET</div>
+  <h2 class="section-title">THE PACKAGE</h2>
+  <div class="h-line"><div class="h-line-dot"></div></div>
+
+  <ul class="included-list">
+    <li><div class="check">✓</div>BossCostumes.com domain</li>
+    <li><div class="check">✓</div>Full ownership transfer</li>
+    <li><div class="check">✓</div>Fast & secure handover</li>
+    <li><div class="check">✓</div>Escrow payment available</li>
+    <li><div class="check">✓</div>No ongoing fees</li>
+    <li><div class="check">✓</div>Negotiable pricing</li>
+    <li><div class="check">✓</div>Immediate delivery</li>
+    <li><div class="check">✓</div>Zero technical lock-in</li>
+  </ul>
+</section>
+
+<!-- ========== CONTACT ========== -->
+<section class="contact reveal" id="contact">
+  <div class="section-label">// GET IN TOUCH</div>
+  <h2 class="section-title">READY TO OWN THIS?</h2>
+  <div class="h-line"><div class="h-line-dot"></div></div>
+
+  <div class="contact-box">
+    <p class="contact-title">Let's Make a Deal</p>
+    <p class="contact-sub">Send an offer, ask a question, or start the acquisition process today. Response within 24 hours. Serious buyers only.</p>
+
+    <div class="contact-links">
+      <a href="tel:+213559096105" class="contact-link phone">
+        <span class="contact-icon">📞</span>
+        <span>CALL</span>
+      </a>
+      <a href="sms:+213559096105" class="contact-link phone">
+        <span class="contact-icon">💬</span>
+        <span>TEXT</span>
+      </a>
+      <a href="mailto:islam.hammia1995@gmail.com" class="contact-link email">
+        <span class="contact-icon">✉️</span>
+        <span>EMAIL</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ========== FOOTER ========== -->
+<footer>
+  <div class="footer-domain">BOSSCOSTUMES.COM</div>
+  <p style="font-family:'Share Tech Mono',monospace;font-size:0.7rem;color:rgba(200,240,255,0.3);letter-spacing:2px;">PREMIUM DOMAIN — FOR SALE</p>
+  <div class="footer-made">MADE BY <span>ISLAM HAMMIA</span></div>
+</footer>
+
+<script>
+// ========== CURSOR ==========
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursorRing');
+let mx = 0, my = 0, rx = 0, ry = 0;
+
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  cursor.style.left = mx + 'px';
+  cursor.style.top = my + 'px';
+});
+
+function animateRing() {
+  rx += (mx - rx) * 0.12;
+  ry += (my - ry) * 0.12;
+  ring.style.left = rx + 'px';
+  ring.style.top = ry + 'px';
+  requestAnimationFrame(animateRing);
+}
+animateRing();
+
+document.querySelectorAll('a, button, .stat-card, .feature-card').forEach(el => {
+  el.addEventListener('mouseenter', () => {
+    cursor.style.width = '20px';
+    cursor.style.height = '20px';
+    ring.style.width = '60px';
+    ring.style.height = '60px';
+  });
+  el.addEventListener('mouseleave', () => {
+    cursor.style.width = '12px';
+    cursor.style.height = '12px';
+    ring.style.width = '36px';
+    ring.style.height = '36px';
+  });
+});
+
+// ========== SCROLL LINE ==========
+const scrollLine = document.getElementById('scrollLine');
+window.addEventListener('scroll', () => {
+  const pct = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+  scrollLine.style.width = pct + '%';
+});
+
+// ========== 3D CARD TILT ==========
+const card = document.getElementById('card3d');
+document.addEventListener('mousemove', e => {
+  if (!card) return;
+  const rect = card.getBoundingClientRect();
+  const cx = rect.left + rect.width / 2;
+  const cy = rect.top + rect.height / 2;
+  const dx = (e.clientX - cx) / rect.width;
+  const dy = (e.clientY - cy) / rect.height;
+  card.style.transform = `rotateY(${dx * 14}deg) rotateX(${-dy * 10}deg) translateZ(20px)`;
+});
+
+// ========== PARTICLES ==========
+const canvas = document.getElementById('particles');
+const ctx = canvas.getContext('2d');
+let W, H, particles = [];
+
+function resize() {
+  W = canvas.width = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', resize);
+
+const colors = ['rgba(0,245,255,', 'rgba(255,215,0,', 'rgba(255,45,120,'];
+
+for (let i = 0; i < 80; i++) {
+  particles.push({
+    x: Math.random() * window.innerWidth,
+    y: Math.random() * window.innerHeight,
+    vx: (Math.random() - 0.5) * 0.4,
+    vy: (Math.random() - 0.5) * 0.4,
+    r: Math.random() * 1.5 + 0.3,
+    color: colors[Math.floor(Math.random() * colors.length)],
+    alpha: Math.random() * 0.5 + 0.1
+  });
+}
+
+function drawParticles() {
+  ctx.clearRect(0, 0, W, H);
+  particles.forEach(p => {
+    p.x += p.vx; p.y += p.vy;
+    if (p.x < 0) p.x = W; if (p.x > W) p.x = 0;
+    if (p.y < 0) p.y = H; if (p.y > H) p.y = 0;
+
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+    ctx.fillStyle = p.color + p.alpha + ')';
+    ctx.fill();
+  });
+
+  // Draw connections
+  for (let i = 0; i < particles.length; i++) {
+    for (let j = i + 1; j < particles.length; j++) {
+      const dx = particles[i].x - particles[j].x;
+      const dy = particles[i].y - particles[j].y;
+      const dist = Math.sqrt(dx*dx + dy*dy);
+      if (dist < 100) {
+        ctx.beginPath();
+        ctx.strokeStyle = 'rgba(0,245,255,' + (0.06 * (1 - dist/100)) + ')';
+        ctx.lineWidth = 0.5;
+        ctx.moveTo(particles[i].x, particles[i].y);
+        ctx.lineTo(particles[j].x, particles[j].y);
+        ctx.stroke();
+      }
+    }
+  }
+
+  requestAnimationFrame(drawParticles);
+}
+drawParticles();
+
+// ========== SCROLL REVEAL ==========
+const reveals = document.querySelectorAll('.reveal');
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      // Stagger children
+      e.target.querySelectorAll('.stat-card, .feature-card, .included-list li').forEach((el, i) => {
+        el.style.transitionDelay = (i * 0.08) + 's';
+        el.classList.add('visible');
+      });
+    }
+  });
+}, { threshold: 0.1 });
+reveals.forEach(r => obs.observe(r));
+
+// ========== COUNTER ANIMATION ==========
+function animateCounter(el, target, suffix) {
+  let current = 0;
+  const step = target / 60;
+  const timer = setInterval(() => {
+    current += step;
+    if (current >= target) { current = target; clearInterval(timer); }
+    el.textContent = Math.floor(current) + suffix;
+  }, 16);
+}
+</script>
+
+<!-- CLOWN -->
+<div id="clown" style="position:fixed;left:18px;bottom:80px;z-index:1000;pointer-events:none;transition:bottom 0.5s cubic-bezier(0.34,1.56,0.64,1);filter:drop-shadow(0 0 14px rgba(255,45,120,0.7));">
+  <svg id="clownSvg" width="72" height="112" viewBox="0 0 72 112" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="36" cy="109" rx="16" ry="4" fill="rgba(0,0,0,0.25)"/>
+    <!-- Body -->
+    <ellipse cx="36" cy="83" rx="20" ry="26" fill="#ff2d78"/>
+    <circle cx="28" cy="76" r="3" fill="rgba(255,255,255,0.25)"/>
+    <circle cx="44" cy="82" r="2.5" fill="rgba(255,255,255,0.25)"/>
+    <circle cx="34" cy="92" r="2" fill="rgba(255,255,255,0.25)"/>
+    <!-- Collar -->
+    <ellipse cx="36" cy="61" rx="18" ry="8" fill="#ffd700"/>
+    <ellipse cx="22" cy="59" rx="7" ry="5" fill="#ff2d78"/>
+    <ellipse cx="36" cy="55" rx="7" ry="5" fill="#00f5ff"/>
+    <ellipse cx="50" cy="59" rx="7" ry="5" fill="#ff2d78"/>
+    <!-- Neck -->
+    <rect x="31" y="51" width="10" height="8" rx="3" fill="#ffe0c0"/>
+    <!-- Head -->
+    <ellipse cx="36" cy="38" rx="22" ry="24" fill="#ffe0c0"/>
+    <!-- Hat brim -->
+    <ellipse cx="36" cy="16" rx="20" ry="5.5" fill="#7b2fff"/>
+    <!-- Hat top -->
+    <rect x="24" y="1" width="24" height="17" rx="5" fill="#7b2fff"/>
+    <!-- Hat pom -->
+    <circle cx="36" cy="1" r="5" fill="#ff2d78"/>
+    <text x="29" y="14" font-size="11" fill="#ffd700">★</text>
+    <!-- Eye whites -->
+    <ellipse cx="26" cy="36" rx="7" ry="8" fill="white"/>
+    <ellipse cx="46" cy="36" rx="7" ry="8" fill="white"/>
+    <!-- Pupils -->
+    <circle id="pupilL" cx="26" cy="37" r="3.5" fill="#1a1a2e"/>
+    <circle id="pupilR" cx="46" cy="37" r="3.5" fill="#1a1a2e"/>
+    <circle cx="27" cy="35" r="1.2" fill="white"/>
+    <circle cx="47" cy="35" r="1.2" fill="white"/>
+    <!-- Brows -->
+    <path d="M19 27 Q26 22 33 27" stroke="#7b2fff" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+    <path d="M39 27 Q46 22 53 27" stroke="#7b2fff" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+    <!-- Nose -->
+    <circle cx="36" cy="44" r="5.5" fill="#ff2d78"/>
+    <circle cx="35" cy="43" r="1.8" fill="rgba(255,255,255,0.4)"/>
+    <!-- Mouth -->
+    <path d="M23 51 Q36 64 49 51" stroke="#7b2fff" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+    <path d="M27 52 Q36 60 45 52" fill="white"/>
+    <!-- Blush -->
+    <ellipse cx="17" cy="46" rx="5" ry="3" fill="rgba(255,80,80,0.3)"/>
+    <ellipse cx="55" cy="46" rx="5" ry="3" fill="rgba(255,80,80,0.3)"/>
+    <!-- Left arm (waving) -->
+    <g id="leftArm">
+      <path d="M18 66 Q2 54 7 39" stroke="#ffe0c0" stroke-width="8" stroke-linecap="round" fill="none"/>
+      <circle cx="7" cy="38" r="6" fill="#ffe0c0"/>
+      <circle cx="2" cy="32" r="3.5" fill="#ffe0c0"/>
+      <circle cx="7" cy="30" r="3.5" fill="#ffe0c0"/>
+      <circle cx="13" cy="32" r="3.5" fill="#ffe0c0"/>
+    </g>
+    <!-- Right arm -->
+    <path d="M54 66 Q70 58 66 76" stroke="#ffe0c0" stroke-width="8" stroke-linecap="round" fill="none"/>
+    <circle cx="66" cy="77" r="6" fill="#ffe0c0"/>
+    <!-- Legs -->
+    <path d="M28 106 Q22 93 29 83" stroke="#7b2fff" stroke-width="10" stroke-linecap="round" fill="none"/>
+    <path d="M44 106 Q50 93 43 83" stroke="#7b2fff" stroke-width="10" stroke-linecap="round" fill="none"/>
+    <!-- Shoes -->
+    <ellipse cx="23" cy="108" rx="15" ry="5" fill="#ffd700"/>
+    <ellipse cx="49" cy="108" rx="15" ry="5" fill="#00f5ff"/>
+  </svg>
+  <!-- Speech bubble -->
+  <div id="clownBubble" style="position:absolute;left:80px;top:8px;background:white;color:#1a1a2e;font-family:'Orbitron',monospace;font-size:0.58rem;font-weight:700;letter-spacing:1px;padding:8px 13px;border-radius:12px 12px 12px 0;white-space:nowrap;box-shadow:0 4px 20px rgba(255,45,120,0.5);opacity:0;transition:opacity 0.4s;pointer-events:none;"></div>
+</div>
+
+<style>
+  @keyframes clownBounce { 0%,100%{transform:translateY(0) rotate(-3deg);}50%{transform:translateY(-12px) rotate(3deg);} }
+  @keyframes armWave { 0%,100%{transform:rotate(0deg);}30%{transform:rotate(-45deg);}65%{transform:rotate(8deg);} }
+  #clownSvg { animation: clownBounce 1.5s ease-in-out infinite; }
+  #leftArm { transform-origin: 18px 66px; animation: armWave 1.3s ease-in-out infinite; }
+</style>
+
+<script>
+  const clown = document.getElementById('clown');
+  const bubble = document.getElementById('clownBubble');
+  const msgs = ["BUY THIS DOMAIN! 🎉","GREAT DEAL! 🤡","ACT NOW! ⚡","BOSS MOVE! 👑","DON'T MISS OUT! 🎭","MAKE AN OFFER! 💰","IT'S A STEAL! 🔥"];
+  let mi = 0, bubTimer;
+
+  function showBubble() {
+    bubble.textContent = msgs[mi++ % msgs.length];
+    bubble.style.opacity = '1';
+    clearTimeout(bubTimer);
+    bubTimer = setTimeout(() => bubble.style.opacity = '0', 2400);
+  }
+  setTimeout(showBubble, 1800);
+  setInterval(showBubble, 4500);
+
+  let lastSY = 0;
+  window.addEventListener('scroll', () => {
+    const pct = window.scrollY / Math.max(document.body.scrollHeight - window.innerHeight, 1);
+    clown.style.bottom = (60 + Math.sin(pct * Math.PI * 8) * 35) + 'px';
+    clown.style.transform = window.scrollY > lastSY ? 'scaleX(1)' : 'scaleX(-1)';
+    lastSY = window.scrollY;
+    if (Math.random() > 0.85) showBubble();
+  });
+
+  document.addEventListener('mousemove', e => {
+    const dx = (e.clientX / window.innerWidth - 0.5) * 4;
+    const dy = (e.clientY / window.innerHeight - 0.5) * 4;
+    document.getElementById('pupilL').setAttribute('cx', 26 + dx);
+    document.getElementById('pupilL').setAttribute('cy', 37 + dy);
+    document.getElementById('pupilR').setAttribute('cx', 46 + dx);
+    document.getElementById('pupilR').setAttribute('cy', 37 + dy);
+  });
+</script>
+</body>
+</html>
